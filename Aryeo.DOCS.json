@@ -1,0 +1,2177 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Aryeo",
+    "version": "2021-06-17",
+    "description": "# Introduction\nThe Aryeo API gives access to the Aryeo platform. You can use your favorite HTTP/REST library for interfacing with the Aryeo API, or you can use one of our SDKs. We support a variety of languages and frameworks that are a great starting point for experimenting with the API. If there is an additional language or framework that you want to see supported, then please reach out and make a contribution!\n\n<div class=\"w-100\"><a class=\"btn btn-lang btn-lang-dart m-2\" href=\"https://github.com/AryeoHQ/aryeo-api-dart-sdk\"></a><a class=\"btn btn-lang btn-lang-go m-2\" href=\"https://github.com/AryeoHQ/aryeo-api-go-sdk\"></a><a class=\"btn btn-lang btn-lang-js m-2\" href=\"https://github.com/AryeoHQ/aryeo-api-js-sdk\"></a><a class=\"btn btn-lang btn-lang-php m-2\" href=\"https://github.com/AryeoHQ/aryeo-api-php-sdk\"></a><a class=\"btn btn-lang btn-lang-ruby m-2\" href=\"https://github.com/AryeoHQ/aryeo-api-ruby-sdk\"></a><a class=\"btn btn-lang btn-lang-rust m-2\" href=\"https://github.com/AryeoHQ/aryeo-api-rust-sdk\"></a><a class=\"btn btn-lang btn-lang-swift m-2\" href=\"https://github.com/AryeoHQ/aryeo-api-swift-sdk\"></a></div>\n\n**Note**: Some SDKs may require you to manually add the `Accept` header to all Aryeo API requests. If so, use the value `application/json`.\n\n# Version Pinning\nThe Aryeo API is versioned. This documentation refers to the most recent version of the API; however, it is possible to use older versions of the API on a request-by-request basis. To explicitly use an older version, pass the `Aryeo-Version` header with a value for the version you would like to use.\n\n**Example**: `Aryeo-Version: 2021-06-17`\n\nInformation about each API version can be found in the releases section of the [documentation repository](https://github.com/AryeoHQ/aryeo-api-docs).\n\n# The Include Parameter\nSome endpoints provide a special `include` query parameter. This parameter allows the client to control the nested relations returned by an API response. For example, if a client only needs minimum information, then it may choose to omit the `include` parameter entirely. Or, if a client wants all possible information, then it may provide all possible values in the `include` parameter. This will have the side-effect of increasing the request's latency, but that may be advantageous depending on the client's use case.\n\n**Hint**: To see all possible values for the `include`  parameter, use an erroneous value such as `./path?include=fake` when making a request. Then, the API will respond with all allowed `include` values for that endpoint.\n\n# Authentication\nThe Aryeo API supports a token-based authentication scheme.\n",
+    "contact": {
+      "name": "Admin",
+      "url": "https://www.aryeo.com",
+      "email": "jarrod@aryeo.com"
+    },
+    "termsOfService": "https://www.aryeo.com/legal/terms-of-service",
+    "x-logo": {
+      "url": "https://raw.githubusercontent.com/jarrodparkes/images/master/aryeo-square.svg",
+      "backgroundColor": "#fafafa"
+    },
+    "license": {
+      "url": "https://choosealicense.com/licenses/apache-2.0/",
+      "name": "Apache 2.0"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.aryeo.com/v1",
+      "description": "Production"
+    }
+  ],
+  "paths": {
+    "/listings": {
+      "get": {
+        "summary": "Get the listings available to a group.",
+        "tags": [
+          "listings"
+        ],
+        "responses": {
+          "200": {
+            "description": "ListingCollection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingCollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-listings",
+        "description": "Get the listings available to a group.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "images,videos,orders"
+            },
+            "in": "query",
+            "name": "include",
+            "description": "Comma separated list of optional data to include in the response.",
+            "allowEmptyValue": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "123 Main St",
+              "minLength": 1,
+              "maxLength": 255
+            },
+            "in": "query",
+            "name": "filter[search]",
+            "description": "Return listings that have fields matching this term."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "123 Main St",
+              "minLength": 1,
+              "maxLength": 255
+            },
+            "in": "query",
+            "name": "filter[address]",
+            "description": "Return listings that have an address matching this term."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255,
+              "example": "John Doe"
+            },
+            "in": "query",
+            "name": "filter[agent]",
+            "description": "Return listings that have a listing agent or co-listing agent matching this term."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DRAFT",
+                "COMING_SOON",
+                "FOR_LEASE",
+                "FOR_SALE",
+                "PENDING_SALE",
+                "PENDING_LEASE",
+                "SOLD",
+                "LEASED",
+                "OFF_MARKET",
+                "null"
+              ],
+              "example": "FOR_SALE",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "filter[status]",
+            "description": "Return listings that have a certain status."
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": true
+            },
+            "in": "query",
+            "name": "filter[active]",
+            "description": "Set as true to return listings that have an active status (e.g. active statuses include `COMING_SOON`, `FOR_SALE`, `FOR_LEASE`, `PENDING_SALE`, `PENDING_LEASE`, `SOLD`, `LEASED`). "
+          },
+          {
+            "schema": {
+              "type": "number",
+              "example": 100000
+            },
+            "in": "query",
+            "name": "filter[price_gte]",
+            "description": "Return listings where the price field is greater than or equal to this value."
+          },
+          {
+            "schema": {
+              "type": "number",
+              "example": 4000000
+            },
+            "in": "query",
+            "name": "filter[price_lte]",
+            "description": "Return listings where the price field is less than or equal to this value."
+          },
+          {
+            "schema": {
+              "type": "number",
+              "example": 1000
+            },
+            "in": "query",
+            "name": "filter[square_feet_gte]",
+            "description": "Return listings where the square feet field is greater than or equal to this value."
+          },
+          {
+            "schema": {
+              "type": "number",
+              "example": 5000
+            },
+            "in": "query",
+            "name": "filter[square_feet_lte]",
+            "description": "Return listings where the square feet field is less than or equal to this value."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "example": 2
+            },
+            "in": "query",
+            "name": "filter[bedrooms_gte]",
+            "description": "Return listings where the bedrooms field is greater than or equal to this value."
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "example": 4
+            },
+            "in": "query",
+            "name": "filter[bedrooms_lte]",
+            "description": "Return listings where the bedrooms field is less than or equal to this value."
+          },
+          {
+            "schema": {
+              "type": "number",
+              "example": 2.5
+            },
+            "in": "query",
+            "name": "filter[bathrooms_gte]",
+            "description": "Return listings where the bathrooms field is greater than or equal to this value."
+          },
+          {
+            "schema": {
+              "type": "number",
+              "example": 5
+            },
+            "in": "query",
+            "name": "filter[bathrooms_lte]",
+            "description": "Return listings where the bathrooms field is less than or equal to this value."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "-created_at",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Comma separated list of fields used for sorting. Placing a minus symbol in front of a field name sorts in descending order. Defaults to `-created_at`."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "25",
+              "minLength": 1,
+              "maxLength": 5
+            },
+            "in": "query",
+            "name": "per_page",
+            "description": "The number of items per page. Defaults to 25."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5,
+              "example": "2"
+            },
+            "in": "query",
+            "name": "page",
+            "description": "The requested page. Defaults to 1."
+          }
+        ],
+        "security": [
+          {
+            "Token": []
+          }
+        ]
+      }
+    },
+    "/listings/{listing_id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "00000000-0000-0000-0000-000000000000"
+          },
+          "name": "listing_id",
+          "in": "path",
+          "required": true,
+          "description": "The ID of a listing."
+        }
+      ],
+      "get": {
+        "summary": "Get information about a listing.",
+        "tags": [
+          "listings"
+        ],
+        "responses": {
+          "200": {
+            "description": "ListingResource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-listings-id",
+        "description": "Get information about a listing.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "images,videos,orders"
+            },
+            "in": "query",
+            "name": "include",
+            "description": "Comma separated list of optional data to include in the response.",
+            "allowEmptyValue": true
+          }
+        ],
+        "security": [
+          {
+            "Token": []
+          }
+        ]
+      }
+    },
+    "/orders": {
+      "get": {
+        "summary": "Get orders available to a group.",
+        "responses": {
+          "200": {
+            "description": "OrderCollection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderCollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-orders",
+        "description": "Get orders of a group.",
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "parameters": [],
+        "tags": [
+          "orders"
+        ]
+      },
+      "post": {
+        "summary": "Create an order.",
+        "operationId": "post-orders",
+        "responses": {
+          "200": {
+            "description": "OrderResource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderResource"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "description": "Create an order.",
+        "tags": [
+          "orders"
+        ],
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderPostPayload"
+              }
+            }
+          },
+          "description": "OrderPostPayload"
+        }
+      }
+    },
+    "/vendors": {
+      "get": {
+        "summary": "Get vendors available to a group.",
+        "responses": {
+          "200": {
+            "description": "GroupCollection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupCollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-vendors",
+        "description": "Get vendors available to a group.",
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "users"
+            },
+            "in": "query",
+            "name": "include",
+            "description": "Comma separated list of optional data to include in the response.",
+            "allowEmptyValue": true
+          }
+        ],
+        "tags": [
+          "vendors"
+        ]
+      },
+      "parameters": []
+    },
+    "/vendors/search": {
+      "get": {
+        "summary": "Get vendors that can be added to the group's vendor list.",
+        "tags": [
+          "vendors"
+        ],
+        "responses": {
+          "200": {
+            "description": "GroupCollection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupCollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-vendors-search",
+        "description": "Get vendors that can be added to the group's vendor list, excluding those that have already been added. ",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "25",
+              "maxLength": 5,
+              "minLength": 1
+            },
+            "in": "query",
+            "name": "per_page",
+            "description": "The number of items per page. Defaults to 25."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255,
+              "example": "2"
+            },
+            "in": "query",
+            "name": "page",
+            "description": "The requested page. Defaults to 1."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "users,default_order_form"
+            },
+            "in": "query",
+            "name": "include",
+            "description": "Comma separated list of optional data to include in the response.",
+            "allowEmptyValue": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "Photography"
+            },
+            "in": "query",
+            "name": "filter[query]",
+            "description": "Set to include vendors that match on this string."
+          }
+        ],
+        "security": [
+          {
+            "Token": []
+          }
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "listings",
+      "description": "Operations related to listings."
+    },
+    {
+      "name": "orders",
+      "description": "Operations related to orders."
+    },
+    {
+      "name": "vendors",
+      "description": "Operations related to vendors."
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Token": {
+        "description": "A personal access token (token) identifying a user, and sometimes, the user's current group. Tokens may be generated in a group's developer settings. The token should be supplied in the authorization header: `Authorization: Bearer {token}`.",
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Address": {
+        "title": "Address",
+        "type": "object",
+        "description": "A street address and additional metadata about a location.",
+        "x-internal": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "ID of the address.",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "nullable": false
+          },
+          "latitude": {
+            "type": "number",
+            "description": "The geographic latitude of some reference point of the location, specified in degrees and decimal parts. Positive numbers must not include the plus symbol.",
+            "example": 42.35157458574123,
+            "minimum": -180,
+            "maximum": 180,
+            "nullable": false
+          },
+          "longitude": {
+            "type": "number",
+            "description": "The geographic longitude of some reference point of the location, specified in degrees and decimal parts. Positive numbers must not include the plus symbol.",
+            "example": -71.05763741484657,
+            "maximum": 180,
+            "minimum": -180,
+            "nullable": false
+          },
+          "street_number": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "107",
+            "description": "The street number portion of a location's address. In some areas, the street number may contain non-numeric characters. This field can also contain extensions and modifiers to the street number, such as \"1/2\" or \"-B\".",
+            "nullable": true
+          },
+          "street_name": {
+            "type": "string",
+            "description": "The street name portion of a location's address.",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "South St",
+            "nullable": true
+          },
+          "unit_number": {
+            "type": "string",
+            "description": "The number or portion of a larger building or complex. Examples are: \"APT G\", \"55\", etc.",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "Unit 2F",
+            "nullable": true
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "The postal code portion of a location's address.",
+            "example": "02111",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "description": "The city of a location's address.",
+            "example": "Boston",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": true
+          },
+          "city_region": {
+            "type": "string",
+            "description": "A sub-section or area of a defined city. Examples would be SoHo in New York, NY, Ironbound in Newark, NJ or Inside the Beltway.",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "Leather District",
+            "nullable": true
+          },
+          "county_or_parish": {
+            "type": "string",
+            "description": "The County, Parish or other regional authority of the location.",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "Suffolk County",
+            "nullable": true
+          },
+          "state_or_province": {
+            "type": "string",
+            "description": "The ISO 3166-2 subdivision code for the state or province of the location. For example, “MA” for Massachusetts, United States.",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "MA",
+            "nullable": true
+          },
+          "state_or_province_region": {
+            "type": "string",
+            "description": "A sub-section or area of a defined state or province. Examples would be the Keys in FL or Hudson Valley in NY.",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "Cape Cod",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "description": "The ISO 3166-1 country code for this for the country of the location.",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "US",
+            "nullable": true
+          },
+          "country_region": {
+            "type": "string",
+            "description": "A sub-section or area of a defined country. Examples would be Napa Valley in the US, or the Amalfi Coast in Italy.",
+            "example": "Napa Valley",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": true
+          },
+          "unparsed_address": {
+            "type": "string",
+            "description": "Unparsed text representation of the address. ",
+            "example": "107 South St, Boston MA, 02111",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": true
+          },
+          "unparsed_address_part_one": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "Unparsed text representation of the first part of the address, typically including the street number, street name, and unit number if applicable.  ",
+            "example": "107 South St, Unit 2F",
+            "nullable": true
+          },
+          "unparsed_address_part_two": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "Unparsed text representation of the second part of the address, typically including the city, state or province, and postal code.  ",
+            "example": "Boston, MA 02111",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "latitude",
+          "longitude"
+        ]
+      },
+      "ApiError": {
+        "type": "object",
+        "title": "ApiError",
+        "description": "A generic error returned by the API.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "message": {
+            "type": "string",
+            "description": "The error message.",
+            "example": "Not found.",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": false
+          },
+          "code": {
+            "type": "integer",
+            "description": "A numeric code corresponding to the error.",
+            "example": 404,
+            "nullable": true
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "ApiFail": {
+        "type": "object",
+        "title": "ApiFail",
+        "description": "A generic failure returned by the API.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "fail",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "Currency": {
+        "title": "Currency",
+        "type": "object",
+        "description": "A system of money used for payment.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "usd",
+            "minLength": 1,
+            "maxLength": 1000,
+            "description": "The ID of the currency.",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "example": "USD",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "The name of the currency.",
+            "nullable": false
+          },
+          "symbol": {
+            "type": "string",
+            "example": "$",
+            "minLength": 1,
+            "maxLength": 10,
+            "description": "The currency symbol.",
+            "nullable": false
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Is this currency enabled for Aryeo?",
+            "example": true,
+            "nullable": false
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "symbol",
+          "enabled"
+        ]
+      },
+      "FloorPlan": {
+        "title": "FloorPlan",
+        "type": "object",
+        "description": "A scale diagram of the arrangement of a building.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the floor plan.",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "nullable": false
+          },
+          "thumbnail_url": {
+            "type": "string",
+            "description": "A URL for a thumbnail-sized version of the floor plan.",
+            "example": "https://via.placeholder.com/250x200.jpg",
+            "minLength": 1,
+            "maxLength": 65535,
+            "format": "uri",
+            "nullable": false
+          },
+          "large_url": {
+            "type": "string",
+            "description": "A URL for a large version of the floor plan.",
+            "example": "https://via.placeholder.com/1750x1400.jpg",
+            "minLength": 1,
+            "maxLength": 65535,
+            "format": "uri",
+            "nullable": false
+          },
+          "original_url": {
+            "type": "string",
+            "description": "A URL for the original, full-resolution version of the floor plan. Useful for downloading.",
+            "example": "https://via.placeholder.com/2500x2000.jpg",
+            "minLength": 1,
+            "maxLength": 65535,
+            "format": "uri",
+            "nullable": false
+          },
+          "title": {
+            "type": "string",
+            "description": "The title (or caption) of the floor plan.",
+            "example": "Downstairs floorplan",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true
+          },
+          "index": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1,
+            "minimum": 0,
+            "description": "Index order position of the floor plan.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "thumbnail_url",
+          "large_url",
+          "original_url"
+        ]
+      },
+      "Group": {
+        "type": "object",
+        "title": "Group",
+        "description": "A collection of users that can interact with the Aryeo platform. Permissions and properties are determined based on the group's type which can be creator, agent, or brokerage.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "ID of the group.",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "nullable": false
+          },
+          "group_type": {
+            "type": "string",
+            "enum": [
+              "creator",
+              "agent",
+              "brokerage"
+            ],
+            "example": "agent",
+            "description": "The type of group.",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 0,
+            "description": "The name of the group.",
+            "example": "John Doe Reality",
+            "nullable": false
+          },
+          "logo": {
+            "type": "string",
+            "description": "Group logo.",
+            "format": "uri",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "https://via.placeholder.com/300.jpg",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "john.doe@gmail.com",
+            "description": "Email.",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "example": "6175550173",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "Phone number.",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "example": "https://www.aryeo.com",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "Website.",
+            "format": "uri",
+            "nullable": true
+          },
+          "is_brokerage_or_brokerage_agent": {
+            "type": "boolean",
+            "description": "Does this group represent a brokerage or an agent who belongs to a brokerage?",
+            "example": true,
+            "nullable": false
+          },
+          "social_profiles": {
+            "$ref": "#/components/schemas/SocialProfiles"
+          },
+          "agent_properties": {
+            "$ref": "#/components/schemas/GroupAgentProperties"
+          },
+          "users": {
+            "type": "array",
+            "description": "users",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "default_order_form": {
+            "$ref": "#/components/schemas/OrderForm"
+          },
+          "order_forms": {
+            "type": "array",
+            "description": "An array of order forms.",
+            "items": {
+              "$ref": "#/components/schemas/OrderForm"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "group_type",
+          "name",
+          "is_brokerage_or_brokerage_agent"
+        ]
+      },
+      "GroupAgentProperties": {
+        "title": "GroupAgentProperties",
+        "type": "object",
+        "description": "A subset of group properties relevant to agents.",
+        "properties": {
+          "brokerage_name": {
+            "type": "string",
+            "example": "John Doe Brokerage",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "Name of brokerage.",
+            "nullable": true
+          },
+          "agent_license_number": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "12345678",
+            "description": "Agent's license number.",
+            "nullable": true
+          },
+          "agent_avatar": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://via.placeholder.com/300.jpg",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "Agent's profile image URL.",
+            "nullable": true
+          }
+        }
+      },
+      "GroupCollection": {
+        "title": "GroupCollection",
+        "type": "object",
+        "description": "A collection of groups.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "type": "array",
+            "description": "",
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinks"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "Image": {
+        "title": "Image",
+        "type": "object",
+        "description": "A visual representation of something.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the image.",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "nullable": false
+          },
+          "thumbnail_url": {
+            "type": "string",
+            "description": "A URL for a thumbnail-sized version of the image.",
+            "example": "https://via.placeholder.com/250x200.jpg",
+            "minLength": 1,
+            "maxLength": 65535,
+            "format": "uri",
+            "nullable": false
+          },
+          "large_url": {
+            "type": "string",
+            "description": "A URL for a large version of the image.",
+            "example": "https://via.placeholder.com/1750x1400.jpg",
+            "minLength": 1,
+            "maxLength": 65535,
+            "format": "uri",
+            "nullable": false
+          },
+          "original_url": {
+            "type": "string",
+            "description": "A URL for the original, full-resolution version of the image. Useful for downloading.",
+            "example": "https://via.placeholder.com/2500x2000.jpg",
+            "minLength": 1,
+            "maxLength": 65535,
+            "format": "uri",
+            "nullable": false
+          },
+          "index": {
+            "type": "integer",
+            "description": "The order in which the image should be displayed amongst other related images.",
+            "example": 2,
+            "nullable": true
+          },
+          "caption": {
+            "type": "string",
+            "description": "A brief explanation of the image.",
+            "example": "This is the front of the house.",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true
+          },
+          "display_in_gallery": {
+            "type": "boolean",
+            "description": "Should the image be displayed in a gallery?",
+            "example": "true",
+            "nullable": false
+          }
+        },
+        "required": [
+          "id",
+          "thumbnail_url",
+          "large_url",
+          "original_url",
+          "display_in_gallery"
+        ]
+      },
+      "InteractiveContent": {
+        "title": "InteractiveContent",
+        "type": "object",
+        "description": "A 3D virtual tour.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the content.",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "nullable": false
+          },
+          "display_type": {
+            "type": "string",
+            "description": "Is the content branded, unbranded, or both?",
+            "minLength": 1,
+            "maxLength": 65535,
+            "enum": [
+              "branded",
+              "unbranded",
+              "both"
+            ],
+            "example": "branded",
+            "nullable": false
+          },
+          "content_type": {
+            "type": "string",
+            "description": "The type of interactive content.",
+            "example": "matterport",
+            "minLength": 1,
+            "maxLength": 65535,
+            "enum": [
+              "matterport",
+              "other"
+            ],
+            "nullable": false
+          },
+          "url": {
+            "type": "string",
+            "description": "URL for the content.",
+            "example": "https://my.matterport.com/show/?m=HFaxPzqNFfm",
+            "minLength": 1,
+            "maxLength": 65535,
+            "format": "uri",
+            "nullable": false
+          },
+          "thumbnail_url": {
+            "type": "string",
+            "description": "A URL for a thumbnail-sized preview of the content.",
+            "example": "https://via.placeholder.com/300.jpg",
+            "minLength": 1,
+            "maxLength": 65535,
+            "format": "uri",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "display_type",
+          "content_type",
+          "url"
+        ]
+      },
+      "Listing": {
+        "title": "Listing",
+        "type": "object",
+        "description": "A real-estate property.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the listing.",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "nullable": false
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Off Market",
+              "Pending Lease",
+              "Vacation Rental",
+              "Leased",
+              "For Sale",
+              "Draft",
+              "Coming Soon",
+              "Soldm",
+              "NULL",
+              "For Lease",
+              "Pending Sale",
+              "Price Reduction",
+              "Sold"
+            ],
+            "example": "For Sale",
+            "description": "Sales status for the listing.",
+            "minLength": 1,
+            "maxLength": 100,
+            "nullable": true
+          },
+          "delivery_status": {
+            "type": "string",
+            "description": "Has this listing been delivered?",
+            "enum": [
+              "delivered",
+              "undelivered"
+            ],
+            "maxLength": 255,
+            "minLength": 0,
+            "example": "delivered",
+            "nullable": false
+          },
+          "thumbnail_url": {
+            "type": "string",
+            "description": "Thumbnail URL for the listing.",
+            "minLength": 0,
+            "maxLength": 65535,
+            "example": "https://via.placeholder.com/300.jpg",
+            "format": "uri",
+            "nullable": true
+          },
+          "branded_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://www.aryeo.com/v2/1200-noble-way-flower-mound-1760/branded",
+            "minLength": 1,
+            "maxLength": 65535,
+            "description": "URL for branded property website.",
+            "nullable": true
+          },
+          "agent": {
+            "$ref": "#/components/schemas/Group"
+          },
+          "co_agent": {
+            "$ref": "#/components/schemas/Group"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            },
+            "description": "images"
+          },
+          "videos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Video"
+            },
+            "description": "videos"
+          },
+          "floor_plans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FloorPlan"
+            },
+            "description": "floor_plans"
+          },
+          "property_websites": {
+            "$ref": "#/components/schemas/PropertyWebsites"
+          },
+          "interactive_content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InteractiveContent"
+            },
+            "description": "interactive_content"
+          },
+          "property_details": {
+            "$ref": "#/components/schemas/PropertyDetails"
+          },
+          "downloads_enabled": {
+            "type": "boolean",
+            "description": "Are downloads enabled for this listing?",
+            "example": true,
+            "nullable": false
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            },
+            "description": "orders"
+          }
+        },
+        "required": [
+          "id",
+          "address",
+          "delivery_status",
+          "downloads_enabled"
+        ]
+      },
+      "ListingCollection": {
+        "title": "ListingCollection",
+        "type": "object",
+        "description": "A collection of listings.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "type": "array",
+            "description": "",
+            "items": {
+              "$ref": "#/components/schemas/Listing"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinks"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "ListingResource": {
+        "title": "ListingResource",
+        "type": "object",
+        "description": "A listing.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "$ref": "#/components/schemas/Listing"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "Order": {
+        "title": "Order",
+        "type": "object",
+        "description": "A payment request for some content or service.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "description": "ID of the order.",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "nullable": false
+          },
+          "display_id": {
+            "type": "integer",
+            "description": "A vanity id to be displayed for the order. For example, \"Order #1000\".",
+            "example": 100,
+            "nullable": false
+          },
+          "total_price_cents": {
+            "type": "integer",
+            "format": "double",
+            "example": 2099,
+            "description": "The total price of the order given in cents.",
+            "nullable": false
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "payment_status": {
+            "type": "string",
+            "enum": [
+              "paid",
+              "unpaid"
+            ],
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "paid",
+            "description": "The payment status of the order.",
+            "nullable": false
+          },
+          "payment_url": {
+            "type": "string",
+            "description": "A URL for to pay for the order.",
+            "example": "https://www.aryeo.com/v2/stripe/checkout/order/00000000-0000-0000-0000-000000000000?pageType=order",
+            "maxLength": 65535,
+            "minLength": 0,
+            "nullable": true
+          },
+          "fulfillment_status": {
+            "type": "string",
+            "description": "The fulfillment status of the order.",
+            "enum": [
+              "fulfilled",
+              "unfulfilled"
+            ],
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "fulfilled",
+            "nullable": false
+          },
+          "status_url": {
+            "type": "string",
+            "description": "A URL to see the order's status.",
+            "example": "https://www.aryeo.com/v2/orders/92b714d7-4a95-4707-8f25-16e6ae077d1f/status/public",
+            "maxLength": 65535,
+            "minLength": 0,
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "display_id",
+          "total_price_cents",
+          "currency",
+          "payment_status",
+          "fulfillment_status"
+        ]
+      },
+      "OrderCollection": {
+        "title": "OrderCollection",
+        "type": "object",
+        "description": "A collection of orders.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "type": "array",
+            "description": "",
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinks"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "OrderForm": {
+        "title": "OrderForm",
+        "type": "object",
+        "description": "A mechanism for placing new orders on the Aryeo platform. ",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "UUID of the order form.",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "BQ's Photography Order Form",
+            "description": "The name of the order form.",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "https://www.aryeo.com/order-forms/00000000-0000-0000-0000-000000000000",
+            "description": "A URL of a publicly-accessible webpage for this order form.",
+            "nullable": false
+          }
+        },
+        "required": [
+          "id",
+          "url"
+        ]
+      },
+      "OrderPostPayload": {
+        "title": "OrderPostPayload",
+        "type": "object",
+        "description": "Payload for creating an order.",
+        "properties": {
+          "fulfillment_status": {
+            "type": "string",
+            "description": "The fulfillment status of the order.",
+            "enum": [
+              "fulfilled",
+              "unfulfilled"
+            ],
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "fulfilled",
+            "nullable": true
+          },
+          "payment_status": {
+            "type": "string",
+            "enum": [
+              "paid",
+              "unpaid"
+            ],
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "paid",
+            "description": "The payment status of the order.",
+            "nullable": true
+          },
+          "product_items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductItem"
+            },
+            "description": "product_items"
+          }
+        }
+      },
+      "OrderResource": {
+        "title": "OrderResource",
+        "type": "object",
+        "description": "An order.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "$ref": "#/components/schemas/Order"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "PaginationLinks": {
+        "title": "PaginationLinks",
+        "type": "object",
+        "description": "Related links for a paginated response.",
+        "properties": {
+          "first": {
+            "type": "string",
+            "description": "The first page.",
+            "example": "https://api.aryeo.com/v1/{path}?page=1",
+            "minLength": 1,
+            "maxLength": 65535,
+            "nullable": false
+          },
+          "last": {
+            "type": "string",
+            "description": "The last page.",
+            "example": "https://api.aryeo.com/v1/{path}?page=10",
+            "minLength": 1,
+            "maxLength": 65535,
+            "nullable": false
+          },
+          "prev": {
+            "type": "string",
+            "description": "The previous page. This is specified as either `string` or `null` purely for spec testing purposes. The model which is autogenerated from this definition will be thrown out and written by-hand.",
+            "example": "https://api.aryeo.com/v1/{path}?page=2",
+            "minLength": 1,
+            "maxLength": 65535,
+            "nullable": true
+          },
+          "next": {
+            "type": "string",
+            "description": "The next page. This is specified as either `string` or `null` purely for spec testing purposes. The model which is autogenerated from this definition will be thrown out and written by-hand.",
+            "example": "https://api.aryeo.com/v1/{path}?page=3",
+            "minLength": 1,
+            "maxLength": 65535,
+            "nullable": true
+          }
+        },
+        "required": [
+          "first",
+          "last"
+        ]
+      },
+      "PaginationMeta": {
+        "title": "PaginationMeta",
+        "type": "object",
+        "description": "Metadata about a paginated response.",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "Total number of records.",
+            "example": 50,
+            "nullable": false
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Number of records per page.",
+            "example": 15,
+            "nullable": false
+          },
+          "current_page": {
+            "type": "integer",
+            "description": "The current page.",
+            "example": 1,
+            "nullable": false
+          },
+          "last_page": {
+            "type": "integer",
+            "description": "The last page of records.",
+            "example": 4,
+            "nullable": false
+          },
+          "from": {
+            "type": "integer",
+            "description": "The ID of the first record on this page. This is specified as either `integer` or `null` purely for spec testing purposes. The model which is autogenerated from this definition will be thrown out and written by-hand.",
+            "example": 1,
+            "nullable": true
+          },
+          "to": {
+            "type": "integer",
+            "description": "The ID of the last record on this page. This is specified as either `integer` or `null` purely for spec testing purposes. The model which is autogenerated from this definition will be thrown out and written by-hand.",
+            "example": 15,
+            "nullable": true
+          },
+          "path": {
+            "type": "string",
+            "description": "The current paged path.",
+            "example": "https://api.aryeo.com/v1/{path}",
+            "minLength": 1,
+            "maxLength": 65535,
+            "nullable": false
+          }
+        },
+        "required": [
+          "total",
+          "per_page",
+          "current_page",
+          "last_page",
+          "path"
+        ]
+      },
+      "ProductItem": {
+        "title": "ProductItem",
+        "type": "object",
+        "description": "A subtype or part of a product that a group is selling.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "description": "ID of the product item.",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "nullable": true
+          }
+        }
+      },
+      "PropertyDetails": {
+        "title": "PropertyDetails",
+        "type": "object",
+        "description": "Details about a real-estate listing.",
+        "properties": {
+          "price": {
+            "type": "integer",
+            "description": "The price of the property in dollars.",
+            "example": 250000,
+            "nullable": true
+          },
+          "mls_number": {
+            "type": "string",
+            "description": "A number assigned to a real-estate listing for the purposes of information sharing.",
+            "minLength": 1,
+            "maxLength": 255,
+            "example": "8137899",
+            "nullable": true
+          },
+          "bedrooms": {
+            "type": "integer",
+            "description": "Number of bedrooms.",
+            "example": 4,
+            "nullable": true
+          },
+          "bathrooms": {
+            "type": "number",
+            "description": "Number of bathrooms. Represented as a number in order to support half-baths.",
+            "example": 3.5,
+            "nullable": true
+          },
+          "square_feet": {
+            "type": "number",
+            "description": "Total number of square feet.",
+            "example": 2511,
+            "nullable": true
+          },
+          "lot_acres": {
+            "type": "number",
+            "description": "Total acres.",
+            "example": 0.47,
+            "nullable": true
+          },
+          "parking_spots": {
+            "type": "integer",
+            "description": "Number of parking spaces.",
+            "example": 3,
+            "nullable": true
+          },
+          "year_built": {
+            "type": "integer",
+            "description": "Year the property was built.",
+            "example": 1960,
+            "nullable": true
+          },
+          "property_type": {
+            "type": "string",
+            "enum": [
+              "Single Family",
+              "Single Family Attached",
+              "Single Family Detached",
+              "Colonial",
+              "Condo",
+              "Townhome",
+              "Twinhome",
+              "Duplex",
+              "Lot",
+              "Land",
+              "Manufactured Home",
+              "Semi-Detached",
+              "Rental",
+              "Row House",
+              "Horse Farm",
+              "Other"
+            ],
+            "example": "Single Family",
+            "description": "Type of property.",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Property description.",
+            "example": "There are technically no designated parking spots; however, the driveway, on the back of the house, can easily park 3 standard-sized vehicles.",
+            "minLength": 1,
+            "maxLength": 65535,
+            "nullable": true
+          }
+        }
+      },
+      "PropertyWebsites": {
+        "title": "PropertyWebsites",
+        "type": "object",
+        "description": "Websites that displays information about a property.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the website.",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "nullable": false
+          },
+          "branded_url": {
+            "type": "string",
+            "description": "URL for website.",
+            "minLength": 1,
+            "maxLength": 65535,
+            "example": "https://www.aryeo.com/v2/1200-noble-way-flower-mound-1760/branded",
+            "format": "uri",
+            "nullable": false
+          },
+          "unbranded_url": {
+            "type": "string",
+            "description": "URL for website.",
+            "minLength": 1,
+            "maxLength": 65535,
+            "example": "https://www.aryeo.com/v2/1200-noble-way-flower-mound-1760/unbranded",
+            "format": "uri",
+            "nullable": false
+          }
+        },
+        "required": [
+          "branded_url",
+          "unbranded_url",
+          "id"
+        ]
+      },
+      "SocialProfiles": {
+        "title": "SocialProfiles",
+        "type": "object",
+        "description": "Details for a real estate agent.",
+        "properties": {
+          "facebook_profile_url": {
+            "type": "string",
+            "description": "URL for Facebook.",
+            "minLength": 0,
+            "maxLength": 65535,
+            "example": "https://www.facebook.com/johndoe",
+            "format": "uri",
+            "nullable": true
+          },
+          "instagram_profile_url": {
+            "type": "string",
+            "description": "URL for Instagram.",
+            "minLength": 0,
+            "maxLength": 65535,
+            "example": "https://www.instagram.com/johndoe",
+            "format": "uri",
+            "nullable": true
+          },
+          "twitter_profile_url": {
+            "type": "string",
+            "description": "URL for Twitter.",
+            "minLength": 0,
+            "maxLength": 65535,
+            "example": "https://twitter.com/johndoe",
+            "format": "uri",
+            "nullable": true
+          },
+          "linkedin_profile_url": {
+            "type": "string",
+            "description": "URL for LinkedIn.",
+            "minLength": 0,
+            "maxLength": 65535,
+            "example": "https://www.linkedin.com/in/johndoe/",
+            "format": "uri",
+            "nullable": true
+          },
+          "zillow_profile_url": {
+            "type": "string",
+            "description": "URL for Zillow.",
+            "minLength": 0,
+            "maxLength": 65535,
+            "example": "https://www.zillow.com/profile/johndoe",
+            "format": "uri",
+            "nullable": true
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "title": "User",
+        "description": "A record of a person on the Aryeo platform.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "ID of the user.",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "nullable": false
+          },
+          "avatar": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://via.placeholder.com/300.jpg",
+            "description": "Avatar.",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "john.doe@gmail.com",
+            "description": "Email.",
+            "nullable": false
+          },
+          "first_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 0,
+            "example": "John",
+            "description": "First name.",
+            "nullable": true
+          },
+          "last_name": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "Doe",
+            "description": "Last name.",
+            "nullable": true
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "America/New_York",
+            "description": "Timezone.",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "example": "123456789",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "Phone number.",
+            "nullable": true
+          },
+          "relationship": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "owner",
+            "description": "Describes user's relationship (access level) to a specified group.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "email"
+        ]
+      },
+      "Video": {
+        "title": "Video",
+        "type": "object",
+        "description": "A recording of moving visual images. Provided either as a download URL (MP4) or a link (e.g. YouTube, Vimeo).",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "description": "ID of the video.",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "nullable": false
+          },
+          "title": {
+            "type": "string",
+            "example": "The New Vimeo Player (You Know, For Videos)",
+            "description": "The title of the video given by the uploading user.",
+            "maxLength": 255,
+            "minLength": 1,
+            "nullable": true
+          },
+          "display_type": {
+            "type": "string",
+            "example": "branded",
+            "description": "The display type determines if the video is branded or unbranded (can also be none or both). This affects whether the video is displayed on branded or unbranded marketing materials such as the property website.",
+            "maxLength": 255,
+            "minLength": 1,
+            "enum": [
+              "branded",
+              "unbranded",
+              "both",
+              "none"
+            ],
+            "nullable": false
+          },
+          "source_type": {
+            "type": "string",
+            "example": "optimized",
+            "description": "The original upload source of the video, used to determine how to handle the playback_url of the video and other display properties. ",
+            "maxLength": 255,
+            "minLength": 1,
+            "enum": [
+              "youtube",
+              "vimeo",
+              "optimized",
+              "uploaded",
+              "link"
+            ],
+            "nullable": false
+          },
+          "thumbnail_url": {
+            "type": "string",
+            "description": "Thumbnail URL for the video.",
+            "minLength": 0,
+            "maxLength": 65535,
+            "example": "https://via.placeholder.com/300.jpg",
+            "format": "uri",
+            "nullable": false
+          },
+          "playback_url": {
+            "type": "string",
+            "description": "A URL linking to the video.",
+            "minLength": 0,
+            "maxLength": 65535,
+            "example": "https://player.vimeo.com/video/76979871",
+            "format": "uri",
+            "nullable": false
+          },
+          "download_url": {
+            "type": "string",
+            "description": "A URL for downloading the video.",
+            "example": "https://videos.aryeo.com/listings/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000.mp4",
+            "maxLength": 65535,
+            "format": "uri",
+            "minLength": 1,
+            "nullable": true
+          },
+          "seconds": {
+            "type": "integer",
+            "description": "The video's runtime in seconds.",
+            "example": 360,
+            "nullable": true
+          },
+          "share_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Aryeo iFrame player URL",
+            "example": "https://www.aryeo.com/v2/00000000-0000-0000-0000-000000000000/videos/1",
+            "minLength": 0,
+            "maxLength": 65535,
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "display_type",
+          "source_type",
+          "thumbnail_url",
+          "playback_url"
+        ]
+      }
+    }
+  }
+}

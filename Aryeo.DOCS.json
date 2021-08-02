@@ -119,7 +119,7 @@
               "example": "John Doe"
             },
             "in": "query",
-            "name": "filter[agent]",
+            "name": "filter[list_agent]",
             "description": "Return listings that have a listing agent or co-listing agent matching this term."
           },
           {
@@ -407,7 +407,41 @@
             "Token": []
           }
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "-created_at",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Comma separated list of fields used for sorting. Placing a minus symbol in front of a field name sorts in descending order. Defaults to `-created_at`."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "25",
+              "minLength": 1,
+              "maxLength": 5
+            },
+            "in": "query",
+            "name": "per_page",
+            "description": "The number of items per page. Defaults to 25."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5,
+              "example": "2"
+            },
+            "in": "query",
+            "name": "page",
+            "description": "The requested page. Defaults to 1."
+          }
+        ],
         "tags": [
           "orders"
         ]
@@ -416,7 +450,7 @@
         "summary": "Create an order.",
         "operationId": "post-orders",
         "responses": {
-          "200": {
+          "201": {
             "description": "OrderResource",
             "content": {
               "application/json": {
@@ -561,19 +595,16 @@
       },
       "parameters": []
     },
-    "/vendors/search": {
+    "/vendors/{vendor_id}": {
       "get": {
-        "summary": "Get vendors that can be added to the group's vendor list.",
-        "tags": [
-          "vendors"
-        ],
+        "summary": "Get vendors available to a group.",
         "responses": {
           "200": {
-            "description": "GroupCollection",
+            "description": "GroupResource",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GroupCollection"
+                  "$ref": "#/components/schemas/GroupResource"
                 }
               }
             }
@@ -609,61 +640,46 @@
             }
           }
         },
-        "operationId": "get-vendors-search",
-        "description": "Get vendors that can be added to the group's vendor list, excluding those that have already been added. ",
+        "operationId": "get-vendors-id",
+        "description": "Get information about a vendor.",
+        "security": [
+          {
+            "Token": []
+          }
+        ],
         "parameters": [
-          {
-            "schema": {
-              "type": "string",
-              "example": "25",
-              "maxLength": 5,
-              "minLength": 1
-            },
-            "in": "query",
-            "name": "per_page",
-            "description": "The number of items per page. Defaults to 25."
-          },
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 255,
-              "example": "2"
-            },
-            "in": "query",
-            "name": "page",
-            "description": "The requested page. Defaults to 1."
-          },
           {
             "schema": {
               "type": "string",
               "minLength": 0,
               "maxLength": 255,
-              "example": "users,default_order_form"
+              "example": "default_order_form"
             },
             "in": "query",
             "name": "include",
             "description": "Comma separated list of optional data to include in the response.",
             "allowEmptyValue": true
-          },
-          {
-            "schema": {
-              "type": "string",
-              "minLength": 0,
-              "maxLength": 255,
-              "example": "Photography"
-            },
-            "in": "query",
-            "name": "filter[query]",
-            "description": "Set to include vendors that match on this string."
           }
         ],
-        "security": [
-          {
-            "Token": []
-          }
+        "tags": [
+          "vendors"
         ]
-      }
+      },
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid"
+          },
+          "name": "vendor_id",
+          "in": "path",
+          "description": "ID of the group that is associated as a vendor.",
+          "required": true
+        }
+      ]
     }
   },
   "tags": [
@@ -890,49 +906,6 @@
           "status"
         ]
       },
-      "Currency": {
-        "title": "Currency",
-        "type": "object",
-        "description": "A system of money used for payment.",
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "usd",
-            "minLength": 1,
-            "maxLength": 1000,
-            "description": "The ID of the currency.",
-            "nullable": false
-          },
-          "name": {
-            "type": "string",
-            "example": "USD",
-            "minLength": 1,
-            "maxLength": 100,
-            "description": "The name of the currency.",
-            "nullable": false
-          },
-          "symbol": {
-            "type": "string",
-            "example": "$",
-            "minLength": 1,
-            "maxLength": 10,
-            "description": "The currency symbol.",
-            "nullable": false
-          },
-          "enabled": {
-            "type": "boolean",
-            "description": "Is this currency enabled for Aryeo?",
-            "example": true,
-            "nullable": false
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "symbol",
-          "enabled"
-        ]
-      },
       "FloorPlan": {
         "title": "FloorPlan",
         "type": "object",
@@ -947,10 +920,10 @@
             "example": "00000000-0000-0000-0000-000000000000",
             "nullable": false
           },
-          "thumbnail_url": {
+          "original_url": {
             "type": "string",
-            "description": "A URL for a thumbnail-sized version of the floor plan.",
-            "example": "https://via.placeholder.com/250x200.jpg",
+            "description": "A URL for the original, full-resolution version of the floor plan. Useful for downloading.",
+            "example": "https://via.placeholder.com/2500x2000.jpg",
             "minLength": 1,
             "maxLength": 65535,
             "format": "uri",
@@ -965,10 +938,10 @@
             "format": "uri",
             "nullable": false
           },
-          "original_url": {
+          "thumbnail_url": {
             "type": "string",
-            "description": "A URL for the original, full-resolution version of the floor plan. Useful for downloading.",
-            "example": "https://via.placeholder.com/2500x2000.jpg",
+            "description": "A URL for a thumbnail-sized version of the floor plan.",
+            "example": "https://via.placeholder.com/250x200.jpg",
             "minLength": 1,
             "maxLength": 65535,
             "format": "uri",
@@ -993,9 +966,9 @@
         },
         "required": [
           "id",
-          "thumbnail_url",
+          "original_url",
           "large_url",
-          "original_url"
+          "thumbnail_url"
         ]
       },
       "Group": {
@@ -1012,18 +985,18 @@
             "example": "00000000-0000-0000-0000-000000000000",
             "nullable": false
           },
-          "group_type": {
+          "type": {
             "type": "string",
-            "enum": [
-              "creator",
-              "agent",
-              "brokerage"
-            ],
-            "example": "agent",
-            "description": "The type of group.",
+            "example": "AGENT",
+            "description": "The type of the group. Can be CREATOR, AGENT, or BROKERAGE, and may dictate the attributes of the group returned.",
             "minLength": 0,
             "maxLength": 255,
-            "nullable": false
+            "nullable": false,
+            "enum": [
+              "CREATOR",
+              "AGENT",
+              "BROKERAGE"
+            ]
           },
           "name": {
             "type": "string",
@@ -1033,22 +1006,13 @@
             "example": "John Doe Reality",
             "nullable": false
           },
-          "logo": {
-            "type": "string",
-            "description": "Group logo.",
-            "format": "uri",
-            "minLength": 0,
-            "maxLength": 255,
-            "example": "https://via.placeholder.com/300.jpg",
-            "nullable": true
-          },
           "email": {
             "type": "string",
             "format": "email",
             "minLength": 0,
             "maxLength": 255,
             "example": "john.doe@gmail.com",
-            "description": "Email.",
+            "description": "The email address of a group.",
             "nullable": true
           },
           "phone": {
@@ -1056,16 +1020,78 @@
             "example": "6175550173",
             "minLength": 0,
             "maxLength": 255,
-            "description": "Phone number.",
+            "description": "A phone number represented in whichever standards specified by the group, typically ###-###-#### (separated by hyphens).",
             "nullable": true
           },
-          "website": {
+          "website_url": {
             "type": "string",
             "example": "https://www.aryeo.com",
             "minLength": 0,
             "maxLength": 255,
-            "description": "Website.",
+            "description": "The website URL of a group.",
             "format": "uri",
+            "nullable": true
+          },
+          "logo_url": {
+            "type": "string",
+            "description": "The logo URL of a group.",
+            "format": "uri",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "https://via.placeholder.com/300.jpg",
+            "nullable": true
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://via.placeholder.com/300.jpg",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "The profile image URL of a real estate agent. Only returned if group's type is AGENT.",
+            "nullable": true
+          },
+          "office_name": {
+            "type": "string",
+            "example": "John Doe Brokerage",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "The name of the brokerage or team of a real estate agent. Only returned if group's type is AGENT.",
+            "nullable": true
+          },
+          "license_number": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "12345678",
+            "description": "The license number of a real estate agent. Only returned if group's type is AGENT.",
+            "nullable": true
+          },
+          "social_profiles": {
+            "$ref": "#/components/schemas/SocialProfiles",
+            "nullable": true
+          },
+          "default_order_form": {
+            "$ref": "#/components/schemas/OrderForm",
+            "nullable": true
+          },
+          "order_forms": {
+            "type": "array",
+            "description": "An array of order forms a vendor group provides for placing orders. Only returned if group's type is CREATOR. ",
+            "items": {
+              "$ref": "#/components/schemas/OrderForm"
+            },
+            "nullable": true
+          },
+          "owner": {
+            "$ref": "#/components/schemas/User",
+            "nullable": true
+          },
+          "users": {
+            "type": "array",
+            "description": "The Aryeo users associated with this group.",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
             "nullable": true
           },
           "is_brokerage_or_brokerage_agent": {
@@ -1073,69 +1099,14 @@
             "description": "Does this group represent a brokerage or an agent who belongs to a brokerage?",
             "example": true,
             "nullable": false
-          },
-          "social_profiles": {
-            "$ref": "#/components/schemas/SocialProfiles"
-          },
-          "agent_properties": {
-            "$ref": "#/components/schemas/GroupAgentProperties"
-          },
-          "users": {
-            "type": "array",
-            "description": "users",
-            "items": {
-              "$ref": "#/components/schemas/User"
-            }
-          },
-          "default_order_form": {
-            "$ref": "#/components/schemas/OrderForm"
-          },
-          "order_forms": {
-            "type": "array",
-            "description": "An array of order forms.",
-            "items": {
-              "$ref": "#/components/schemas/OrderForm"
-            }
           }
         },
         "required": [
           "id",
-          "group_type",
+          "type",
           "name",
           "is_brokerage_or_brokerage_agent"
         ]
-      },
-      "GroupAgentProperties": {
-        "title": "GroupAgentProperties",
-        "type": "object",
-        "description": "A subset of group properties relevant to agents.",
-        "properties": {
-          "brokerage_name": {
-            "type": "string",
-            "example": "John Doe Brokerage",
-            "minLength": 0,
-            "maxLength": 255,
-            "description": "Name of brokerage.",
-            "nullable": true
-          },
-          "agent_license_number": {
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 255,
-            "example": "12345678",
-            "description": "Agent's license number.",
-            "nullable": true
-          },
-          "agent_avatar": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://via.placeholder.com/300.jpg",
-            "minLength": 0,
-            "maxLength": 255,
-            "description": "Agent's profile image URL.",
-            "nullable": true
-          }
-        }
       },
       "GroupCollection": {
         "title": "GroupCollection",
@@ -1155,13 +1126,38 @@
             "description": "",
             "items": {
               "$ref": "#/components/schemas/Group"
-            }
+            },
+            "nullable": true
           },
           "meta": {
-            "$ref": "#/components/schemas/PaginationMeta"
+            "$ref": "#/components/schemas/PaginationMeta",
+            "nullable": true
           },
           "links": {
-            "$ref": "#/components/schemas/PaginationLinks"
+            "$ref": "#/components/schemas/PaginationLinks",
+            "nullable": true
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "GroupResource": {
+        "title": "GroupResource",
+        "type": "object",
+        "description": "A group.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "$ref": "#/components/schemas/Group",
+            "nullable": true
           }
         },
         "required": [
@@ -1258,22 +1254,22 @@
             "minLength": 1,
             "maxLength": 65535,
             "enum": [
-              "branded",
-              "unbranded",
-              "both"
+              "BRANDED",
+              "UNBRANDED",
+              "BOTH"
             ],
-            "example": "branded",
+            "example": "BRANDED",
             "nullable": false
           },
           "content_type": {
             "type": "string",
             "description": "The type of interactive content.",
-            "example": "matterport",
+            "example": "MATTERPORT",
             "minLength": 1,
             "maxLength": 65535,
             "enum": [
-              "matterport",
-              "other"
+              "MATTERPORT",
+              "OTHER"
             ],
             "nullable": false
           },
@@ -1306,7 +1302,7 @@
       "Listing": {
         "title": "Listing",
         "type": "object",
-        "description": "A real-estate property.",
+        "description": "A real estate listing.",
         "properties": {
           "id": {
             "type": "string",
@@ -1320,119 +1316,195 @@
           "address": {
             "$ref": "#/components/schemas/Address"
           },
-          "status": {
+          "mls_number": {
             "type": "string",
-            "enum": [
-              "Off Market",
-              "Pending Lease",
-              "Vacation Rental",
-              "Leased",
-              "For Sale",
-              "Draft",
-              "Coming Soon",
-              "Soldm",
-              "NULL",
-              "For Lease",
-              "Pending Sale",
-              "Price Reduction",
-              "Sold"
-            ],
-            "example": "For Sale",
-            "description": "Sales status for the listing.",
+            "description": "The identifier for a listing on its local MLS. ",
             "minLength": 1,
             "maxLength": 100,
-            "nullable": true
+            "nullable": true,
+            "example": "1850209"
           },
-          "delivery_status": {
+          "type": {
             "type": "string",
-            "description": "Has this listing been delivered?",
+            "example": "RESIDENTIAL",
+            "description": "General type of the listing, primarily categorizing its use case. Examples include residential and commercial. ",
+            "minLength": 1,
+            "maxLength": 100,
+            "nullable": true,
             "enum": [
-              "delivered",
-              "undelivered"
-            ],
-            "maxLength": 255,
-            "minLength": 0,
-            "example": "delivered",
-            "nullable": false
+              "BUSINESS_OPPORTUNITY",
+              "COMMERCIAL_LEASE",
+              "COMMERCIAL_SALE",
+              "FARM",
+              "LAND",
+              "MANUFACTURED_IN_PARK",
+              "RESIDENTIAL",
+              "RESIDENTIAL_INCOME",
+              "RESIDENTIAL_LEASE"
+            ]
           },
-          "thumbnail_url": {
+          "sub_type": {
             "type": "string",
-            "description": "Thumbnail URL for the listing.",
-            "minLength": 0,
-            "maxLength": 65535,
-            "example": "https://via.placeholder.com/300.jpg",
-            "format": "uri",
-            "nullable": true
+            "example": "SINGLE_FAMILY_RESIDENCE",
+            "description": "Further specifies the listing type. Examples include family residence and condominium.",
+            "minLength": 1,
+            "maxLength": 100,
+            "nullable": true,
+            "enum": [
+              "APARTMENT",
+              "CONDOMINIUM",
+              "DUPLEX",
+              "FARM",
+              "SINGLE_FAMILY_RESIDENCE",
+              "TIMESHARE",
+              "TOWNHOUSE",
+              "OFFICE"
+            ]
           },
-          "branded_url": {
+          "status": {
             "type": "string",
-            "format": "uri",
-            "example": "https://www.aryeo.com/v2/1200-noble-way-flower-mound-1760/branded",
+            "example": "COMING_SOON",
+            "description": "Local, regional, or otherwise custom status for the listing used by the parties involved in the listing transaction. While variable, these statuses are typically mapped to the listing's standard status.",
+            "minLength": 1,
+            "maxLength": 100,
+            "nullable": true,
+            "enum": [
+              "DRAFT",
+              "COMING_SOON",
+              "FOR_SALE",
+              "FOR_LEASE",
+              "PENDING_SALE",
+              "PENDING_LEASE",
+              "SOLD",
+              "LEASED",
+              "OFF_MARKET"
+            ]
+          },
+          "standard_status": {
+            "type": "string",
+            "example": "COMING_SOON",
+            "description": "The status of the listing as it reflects the state of the contract between the listing agent and seller or an agreement with a buyer, including Active, Active Under Contract, Canceled, Closed, Expired, Pending, and Withdrawn.",
+            "minLength": 1,
+            "maxLength": 100,
+            "nullable": true,
+            "enum": [
+              "ACTIVE",
+              "ACTIVE_UNDER_CONTRACT",
+              "CANCELED",
+              "CLOSED",
+              "COMING_SOON",
+              "DELETE",
+              "EXPIRED",
+              "HOLD",
+              "INCOMPLETE",
+              "PENDING",
+              "WITHDRAWN"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the selling points of the building and/or land for sale. ",
+            "example": "There are technically no designated parking spots; however, the driveway, on the back of the house, can easily park 3 standard-sized vehicles.",
             "minLength": 1,
             "maxLength": 65535,
-            "description": "URL for branded property website.",
             "nullable": true
           },
-          "agent": {
+          "lot": {
+            "$ref": "#/components/schemas/ListingLot"
+          },
+          "building": {
+            "$ref": "#/components/schemas/ListingBuilding"
+          },
+          "price": {
+            "$ref": "#/components/schemas/ListingPrice"
+          },
+          "list_agent": {
             "$ref": "#/components/schemas/Group"
           },
-          "co_agent": {
+          "co_list_agent": {
             "$ref": "#/components/schemas/Group"
           },
           "images": {
             "type": "array",
+            "description": "images",
             "items": {
               "$ref": "#/components/schemas/Image"
-            },
-            "description": "images"
+            }
           },
           "videos": {
             "type": "array",
+            "description": "videos",
             "items": {
               "$ref": "#/components/schemas/Video"
-            },
-            "description": "videos"
+            }
           },
           "floor_plans": {
             "type": "array",
+            "description": "floor_plans",
             "items": {
               "$ref": "#/components/schemas/FloorPlan"
-            },
-            "description": "floor_plans"
-          },
-          "property_websites": {
-            "$ref": "#/components/schemas/PropertyWebsites"
+            }
           },
           "interactive_content": {
             "type": "array",
+            "description": "interactive_content",
             "items": {
               "$ref": "#/components/schemas/InteractiveContent"
-            },
-            "description": "interactive_content"
+            }
           },
-          "property_details": {
-            "$ref": "#/components/schemas/PropertyDetails"
+          "property_website": {
+            "$ref": "#/components/schemas/PropertyWebsite"
+          },
+          "orders": {
+            "type": "array",
+            "description": "orders",
+            "items": {
+              "$ref": "#/components/schemas/Order"
+            }
           },
           "downloads_enabled": {
             "type": "boolean",
             "description": "Are downloads enabled for this listing?",
             "example": true,
             "nullable": false
-          },
-          "orders": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Order"
-            },
-            "description": "orders"
           }
         },
         "required": [
           "id",
           "address",
-          "delivery_status",
           "downloads_enabled"
         ]
+      },
+      "ListingBuilding": {
+        "title": "ListingBuilding",
+        "type": "object",
+        "description": "Structural data of the primary building on a listing. Includes everything from square footage of certain spaces to construction dates. ",
+        "properties": {
+          "bedrooms": {
+            "type": "integer",
+            "description": "Total number of bedrooms.",
+            "example": 4,
+            "nullable": true
+          },
+          "bathrooms": {
+            "type": "number",
+            "description": "Sum of the number of bathrooms. Represented as a number in order to support half-baths.",
+            "example": 3.5,
+            "nullable": true
+          },
+          "square_feet": {
+            "type": "number",
+            "description": "Total number of square feet.",
+            "example": 2511,
+            "nullable": true
+          },
+          "year_built": {
+            "type": "integer",
+            "description": "Year the property was built.",
+            "example": 1960,
+            "nullable": true
+          }
+        }
       },
       "ListingCollection": {
         "title": "ListingCollection",
@@ -1452,18 +1524,56 @@
             "description": "",
             "items": {
               "$ref": "#/components/schemas/Listing"
-            }
+            },
+            "nullable": true
           },
           "meta": {
-            "$ref": "#/components/schemas/PaginationMeta"
+            "$ref": "#/components/schemas/PaginationMeta",
+            "nullable": true
           },
           "links": {
-            "$ref": "#/components/schemas/PaginationLinks"
+            "$ref": "#/components/schemas/PaginationLinks",
+            "nullable": true
           }
         },
         "required": [
           "status"
         ]
+      },
+      "ListingLot": {
+        "title": "ListingLot",
+        "type": "object",
+        "description": "Parcel data of the lot of a listing. Includes nearly everything about the land that makes up the listing.",
+        "properties": {
+          "size_acres": {
+            "type": "number",
+            "description": "Total area of the lot of a listing in acres. ",
+            "example": 0.47,
+            "nullable": true,
+            "minimum": 0
+          },
+          "open_parking_spaces": {
+            "type": "number",
+            "description": "Number of parking spaces.",
+            "example": 3,
+            "nullable": true,
+            "minimum": 0
+          }
+        }
+      },
+      "ListingPrice": {
+        "title": "ListingPrice",
+        "type": "object",
+        "properties": {
+          "list_price": {
+            "type": "integer",
+            "description": "The current price of the listing.",
+            "example": 250000,
+            "nullable": true,
+            "minimum": 0
+          }
+        },
+        "description": "Valuation data relating to the price of a listing."
       },
       "ListingResource": {
         "title": "ListingResource",
@@ -1479,7 +1589,8 @@
             "nullable": false
           },
           "data": {
-            "$ref": "#/components/schemas/Listing"
+            "$ref": "#/components/schemas/Listing",
+            "nullable": true
           }
         },
         "required": [
@@ -1500,27 +1611,37 @@
             "format": "uuid",
             "nullable": false
           },
-          "display_id": {
+          "number": {
             "type": "integer",
-            "description": "A vanity id to be displayed for the order. For example, \"Order #1000\".",
+            "description": "A vanity id used for internal tracking of orders for a given vendor. ",
             "example": 100,
             "nullable": false
           },
-          "total_price_cents": {
-            "type": "integer",
-            "format": "double",
-            "example": 2099,
-            "description": "The total price of the order given in cents.",
-            "nullable": false
+          "title": {
+            "type": "string",
+            "description": "The title of the order, generated by combining the order's number property with the prefix \"Order #\". ",
+            "example": "Order #100",
+            "nullable": false,
+            "minLength": 0,
+            "maxLength": 255
           },
-          "currency": {
-            "$ref": "#/components/schemas/Currency"
+          "fulfillment_status": {
+            "type": "string",
+            "description": "The fulfillment status of the order.",
+            "enum": [
+              "FULFILLED",
+              "UNFULFILLED"
+            ],
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "fulfilled",
+            "nullable": false
           },
           "payment_status": {
             "type": "string",
             "enum": [
-              "paid",
-              "unpaid"
+              "PAID",
+              "UNPAID"
             ],
             "minLength": 0,
             "maxLength": 255,
@@ -1528,29 +1649,41 @@
             "description": "The payment status of the order.",
             "nullable": false
           },
+          "currency": {
+            "type": "string",
+            "description": "The three-letter ISO 4217 currency code for the currency in which this order was or will be transacted. Must be a supported currency of Aryeo. ",
+            "example": "usd",
+            "minLength": 0,
+            "maxLength": 255,
+            "enum": [
+              "USD",
+              "CAD",
+              "GBP",
+              "CHF",
+              "EUR",
+              "AUD",
+              "NZD",
+              "ZAR"
+            ]
+          },
+          "total_amount": {
+            "type": "integer",
+            "example": 2099,
+            "description": "A positive integer in cents representing the total order amount that was or will be charged.",
+            "nullable": false,
+            "minimum": 0
+          },
           "payment_url": {
             "type": "string",
-            "description": "A URL for to pay for the order.",
+            "description": "A URL of a publicly-accessible webpage to pay for the order.",
             "example": "https://www.aryeo.com/v2/stripe/checkout/order/00000000-0000-0000-0000-000000000000?pageType=order",
             "maxLength": 65535,
             "minLength": 0,
             "nullable": true
           },
-          "fulfillment_status": {
-            "type": "string",
-            "description": "The fulfillment status of the order.",
-            "enum": [
-              "fulfilled",
-              "unfulfilled"
-            ],
-            "minLength": 0,
-            "maxLength": 255,
-            "example": "fulfilled",
-            "nullable": false
-          },
           "status_url": {
             "type": "string",
-            "description": "A URL to see the order's status.",
+            "description": "A URL of a publicly-accessible webpage to see the order's status.",
             "example": "https://www.aryeo.com/v2/orders/92b714d7-4a95-4707-8f25-16e6ae077d1f/status/public",
             "maxLength": 65535,
             "minLength": 0,
@@ -1559,11 +1692,10 @@
         },
         "required": [
           "id",
-          "display_id",
-          "total_price_cents",
-          "currency",
-          "payment_status",
-          "fulfillment_status"
+          "number",
+          "title",
+          "fulfillment_status",
+          "payment_status"
         ]
       },
       "OrderCollection": {
@@ -1584,13 +1716,16 @@
             "description": "",
             "items": {
               "$ref": "#/components/schemas/Order"
-            }
+            },
+            "nullable": true
           },
           "meta": {
-            "$ref": "#/components/schemas/PaginationMeta"
+            "$ref": "#/components/schemas/PaginationMeta",
+            "nullable": true
           },
           "links": {
-            "$ref": "#/components/schemas/PaginationLinks"
+            "$ref": "#/components/schemas/PaginationLinks",
+            "nullable": true
           }
         },
         "required": [
@@ -1611,12 +1746,12 @@
             "description": "UUID of the order form.",
             "nullable": false
           },
-          "name": {
+          "title": {
             "type": "string",
             "minLength": 0,
             "maxLength": 255,
             "example": "BQ's Photography Order Form",
-            "description": "The name of the order form.",
+            "description": "The title or name of the order form.",
             "nullable": true
           },
           "url": {
@@ -1641,10 +1776,10 @@
         "properties": {
           "fulfillment_status": {
             "type": "string",
-            "description": "The fulfillment status of the order.",
+            "description": "The fulfillment status of the order. Defaults to \"UNFULFILLED\".",
             "enum": [
-              "fulfilled",
-              "unfulfilled"
+              "FULFILLED",
+              "UNFULFILLED"
             ],
             "minLength": 0,
             "maxLength": 255,
@@ -1654,21 +1789,14 @@
           "payment_status": {
             "type": "string",
             "enum": [
-              "paid",
-              "unpaid"
+              "PAID",
+              "UNPAID"
             ],
             "minLength": 0,
             "maxLength": 255,
             "example": "paid",
-            "description": "The payment status of the order.",
+            "description": "The payment status of the order. Defaults to \"UNPAID\". ",
             "nullable": true
-          },
-          "product_items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductItem"
-            },
-            "description": "product_items"
           }
         }
       },
@@ -1686,7 +1814,8 @@
             "nullable": false
           },
           "data": {
-            "$ref": "#/components/schemas/Order"
+            "$ref": "#/components/schemas/Order",
+            "nullable": true
           }
         },
         "required": [
@@ -1694,6 +1823,7 @@
         ]
       },
       "PaginationLinks": {
+        "nullable": true,
         "title": "PaginationLinks",
         "type": "object",
         "description": "Related links for a paginated response.",
@@ -1737,6 +1867,7 @@
         ]
       },
       "PaginationMeta": {
+        "nullable": true,
         "title": "PaginationMeta",
         "type": "object",
         "description": "Metadata about a paginated response.",
@@ -1794,117 +1925,10 @@
           "path"
         ]
       },
-      "ProductItem": {
-        "title": "ProductItem",
+      "PropertyWebsite": {
+        "title": "PropertyWebsite",
         "type": "object",
-        "description": "A subtype or part of a product that a group is selling.",
-        "properties": {
-          "id": {
-            "type": "string",
-            "example": "00000000-0000-0000-0000-000000000000",
-            "description": "ID of the product item.",
-            "minLength": 0,
-            "maxLength": 255,
-            "format": "uuid",
-            "nullable": true
-          }
-        }
-      },
-      "PropertyDetails": {
-        "title": "PropertyDetails",
-        "type": "object",
-        "description": "Details about a real-estate listing.",
-        "properties": {
-          "price": {
-            "type": "integer",
-            "description": "The price of the property in dollars.",
-            "example": 250000,
-            "nullable": true
-          },
-          "mls_number": {
-            "type": "string",
-            "description": "A number assigned to a real-estate listing for the purposes of information sharing.",
-            "minLength": 1,
-            "maxLength": 255,
-            "example": "8137899",
-            "nullable": true
-          },
-          "bedrooms": {
-            "type": "integer",
-            "description": "Number of bedrooms.",
-            "example": 4,
-            "nullable": true
-          },
-          "bathrooms": {
-            "type": "number",
-            "description": "Number of bathrooms. Represented as a number in order to support half-baths.",
-            "example": 3.5,
-            "nullable": true
-          },
-          "square_feet": {
-            "type": "number",
-            "description": "Total number of square feet.",
-            "example": 2511,
-            "nullable": true
-          },
-          "lot_acres": {
-            "type": "number",
-            "description": "Total acres.",
-            "example": 0.47,
-            "nullable": true
-          },
-          "parking_spots": {
-            "type": "integer",
-            "description": "Number of parking spaces.",
-            "example": 3,
-            "nullable": true
-          },
-          "year_built": {
-            "type": "integer",
-            "description": "Year the property was built.",
-            "example": 1960,
-            "nullable": true
-          },
-          "property_type": {
-            "type": "string",
-            "enum": [
-              "Single Family",
-              "Single Family Attached",
-              "Single Family Detached",
-              "Colonial",
-              "Condo",
-              "Townhome",
-              "Twinhome",
-              "Duplex",
-              "Lot",
-              "Land",
-              "Manufactured Home",
-              "Semi-Detached",
-              "Rental",
-              "Row House",
-              "Horse Farm",
-              "Other"
-            ],
-            "example": "Single Family",
-            "description": "Type of property.",
-            "minLength": 0,
-            "maxLength": 255,
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "description": "Property description.",
-            "example": "There are technically no designated parking spots; however, the driveway, on the back of the house, can easily park 3 standard-sized vehicles.",
-            "minLength": 1,
-            "maxLength": 65535,
-            "nullable": true
-          }
-        }
-      },
-      "PropertyWebsites": {
-        "title": "PropertyWebsites",
-        "type": "object",
-        "description": "Websites that displays information about a property.",
+        "description": "Website (in branded and unbranded versions) that displays information about a property.",
         "properties": {
           "id": {
             "type": "string",
@@ -1917,7 +1941,7 @@
           },
           "branded_url": {
             "type": "string",
-            "description": "URL for website.",
+            "description": "URL for branded version of website.",
             "minLength": 1,
             "maxLength": 65535,
             "example": "https://www.aryeo.com/v2/1200-noble-way-flower-mound-1760/branded",
@@ -1926,7 +1950,7 @@
           },
           "unbranded_url": {
             "type": "string",
-            "description": "URL for website.",
+            "description": "URL for unbranded version of website.",
             "minLength": 1,
             "maxLength": 65535,
             "example": "https://www.aryeo.com/v2/1200-noble-way-flower-mound-1760/unbranded",
@@ -1935,15 +1959,16 @@
           }
         },
         "required": [
+          "id",
           "branded_url",
-          "unbranded_url",
-          "id"
+          "unbranded_url"
         ]
       },
       "SocialProfiles": {
+        "nullable": true,
         "title": "SocialProfiles",
         "type": "object",
-        "description": "Details for a real estate agent.",
+        "description": "External profile URLs for an agent or brokerage group.",
         "properties": {
           "facebook_profile_url": {
             "type": "string",
@@ -2006,22 +2031,13 @@
             "example": "00000000-0000-0000-0000-000000000000",
             "nullable": false
           },
-          "avatar": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://via.placeholder.com/300.jpg",
-            "description": "Avatar.",
-            "minLength": 0,
-            "maxLength": 255,
-            "nullable": true
-          },
           "email": {
             "type": "string",
             "format": "email",
             "minLength": 0,
             "maxLength": 255,
             "example": "john.doe@gmail.com",
-            "description": "Email.",
+            "description": "Email address of the user.",
             "nullable": false
           },
           "first_name": {
@@ -2029,7 +2045,7 @@
             "maxLength": 255,
             "minLength": 0,
             "example": "John",
-            "description": "First name.",
+            "description": "First name of the user.",
             "nullable": true
           },
           "last_name": {
@@ -2037,15 +2053,7 @@
             "minLength": 0,
             "maxLength": 255,
             "example": "Doe",
-            "description": "Last name.",
-            "nullable": true
-          },
-          "timezone": {
-            "type": "string",
-            "minLength": 0,
-            "maxLength": 255,
-            "example": "America/New_York",
-            "description": "Timezone.",
+            "description": "Last name of the user.",
             "nullable": true
           },
           "phone": {
@@ -2053,7 +2061,16 @@
             "example": "123456789",
             "minLength": 0,
             "maxLength": 255,
-            "description": "Phone number.",
+            "description": "A phone number represented in whichever standards specified by the user, typically ###-###-#### (separated by hyphens).",
+            "nullable": true
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://via.placeholder.com/300.jpg",
+            "description": "The avatar image URL of a user.",
+            "minLength": 0,
+            "maxLength": 255,
             "nullable": true
           },
           "relationship": {
@@ -2061,7 +2078,7 @@
             "minLength": 0,
             "maxLength": 255,
             "example": "owner",
-            "description": "Describes user's relationship (access level) to a specified group.",
+            "description": "Describes user's relationship (access level) to a specified group. Only returned if this resource is returned as a sub-resource of a group.",
             "nullable": true
           }
         },
@@ -2092,38 +2109,44 @@
             "minLength": 1,
             "nullable": true
           },
+          "duration": {
+            "type": "integer",
+            "description": "The video's runtime in seconds.",
+            "example": 360,
+            "nullable": true
+          },
           "display_type": {
             "type": "string",
-            "example": "branded",
+            "example": "BRANDED",
             "description": "The display type determines if the video is branded or unbranded (can also be none or both). This affects whether the video is displayed on branded or unbranded marketing materials such as the property website.",
             "maxLength": 255,
             "minLength": 1,
             "enum": [
-              "branded",
-              "unbranded",
-              "both",
-              "none"
+              "BRANDED",
+              "UNBRANDED",
+              "BOTH",
+              "NONE"
             ],
             "nullable": false
           },
           "source_type": {
             "type": "string",
-            "example": "optimized",
+            "example": "OPTIMIZED",
             "description": "The original upload source of the video, used to determine how to handle the playback_url of the video and other display properties. ",
             "maxLength": 255,
             "minLength": 1,
             "enum": [
-              "youtube",
-              "vimeo",
-              "optimized",
-              "uploaded",
-              "link"
+              "YOUTUBE",
+              "VIMEO",
+              "OPTIMIZED",
+              "UPLOADED",
+              "LINK"
             ],
             "nullable": false
           },
           "thumbnail_url": {
             "type": "string",
-            "description": "Thumbnail URL for the video.",
+            "description": "A thumbnail image URL for the video.",
             "minLength": 0,
             "maxLength": 65535,
             "example": "https://via.placeholder.com/300.jpg",
@@ -2132,7 +2155,7 @@
           },
           "playback_url": {
             "type": "string",
-            "description": "A URL linking to the video.",
+            "description": "A URL linking to playback stream of the video.",
             "minLength": 0,
             "maxLength": 65535,
             "example": "https://player.vimeo.com/video/76979871",
@@ -2148,16 +2171,10 @@
             "minLength": 1,
             "nullable": true
           },
-          "seconds": {
-            "type": "integer",
-            "description": "The video's runtime in seconds.",
-            "example": 360,
-            "nullable": true
-          },
           "share_url": {
             "type": "string",
             "format": "uri",
-            "description": "Aryeo iFrame player URL",
+            "description": "A URL linking to a public viewing optimized webpage the video.",
             "example": "https://www.aryeo.com/v2/00000000-0000-0000-0000-000000000000/videos/1",
             "minLength": 0,
             "maxLength": 65535,

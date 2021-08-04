@@ -275,14 +275,14 @@
           "schema": {
             "type": "string",
             "format": "uuid",
-            "minLength": 0,
-            "maxLength": 255,
-            "example": "00000000-0000-0000-0000-000000000000"
+            "minLength": 36,
+            "maxLength": 36,
+            "example": "00000000-0000-4000-8000-000000000000"
           },
           "name": "listing_id",
           "in": "path",
           "required": true,
-          "description": "The ID of a listing."
+          "description": "The ID of a listing. UUID Version 4."
         }
       ],
       "get": {
@@ -669,14 +669,14 @@
         {
           "schema": {
             "type": "string",
-            "example": "00000000-0000-0000-0000-000000000000",
-            "minLength": 0,
-            "maxLength": 255,
+            "example": "00000000-0000-4000-8000-000000000000",
+            "minLength": 36,
+            "maxLength": 36,
             "format": "uuid"
           },
           "name": "vendor_id",
           "in": "path",
-          "description": "ID of the group that is associated as a vendor.",
+          "description": "The ID of the group that is associated as a vendor. UUID Version 4.",
           "required": true
         }
       ]
@@ -714,10 +714,10 @@
           "id": {
             "type": "string",
             "format": "uuid",
-            "minLength": 0,
-            "maxLength": 255,
-            "description": "ID of the address.",
-            "example": "00000000-0000-0000-0000-000000000000",
+            "minLength": 36,
+            "maxLength": 36,
+            "description": "ID of the address. UUID Version 4.",
+            "example": "00000000-0000-4000-8000-000000000000",
             "nullable": false
           },
           "latitude": {
@@ -913,11 +913,11 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "ID of the floor plan.",
-            "minLength": 0,
-            "maxLength": 255,
+            "description": "ID of the floor plan. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
             "format": "uuid",
-            "example": "00000000-0000-0000-0000-000000000000",
+            "example": "00000000-0000-4000-8000-000000000000",
             "nullable": false
           },
           "original_url": {
@@ -979,10 +979,10 @@
           "id": {
             "type": "string",
             "format": "uuid",
-            "minLength": 0,
-            "maxLength": 255,
-            "description": "ID of the group.",
-            "example": "00000000-0000-0000-0000-000000000000",
+            "minLength": 36,
+            "maxLength": 36,
+            "description": "ID of the group. UUID Version 4.",
+            "example": "00000000-0000-4000-8000-000000000000",
             "nullable": false
           },
           "type": {
@@ -1171,11 +1171,11 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "ID of the image.",
-            "minLength": 0,
-            "maxLength": 255,
+            "description": "ID of the image. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
             "format": "uuid",
-            "example": "00000000-0000-0000-0000-000000000000",
+            "example": "00000000-0000-4000-8000-000000000000",
             "nullable": false
           },
           "thumbnail_url": {
@@ -1241,10 +1241,10 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "ID of the content.",
-            "example": "00000000-0000-0000-0000-000000000000",
-            "minLength": 0,
-            "maxLength": 255,
+            "description": "ID of the content. UUID Version 4.",
+            "example": "00000000-0000-4000-8000-000000000000",
+            "minLength": 36,
+            "maxLength": 36,
             "format": "uuid",
             "nullable": false
           },
@@ -1306,11 +1306,11 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "ID of the listing.",
-            "minLength": 0,
-            "maxLength": 255,
+            "description": "ID of the listing. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
             "format": "uuid",
-            "example": "00000000-0000-0000-0000-000000000000",
+            "example": "00000000-0000-4000-8000-000000000000",
             "nullable": false
           },
           "address": {
@@ -1604,10 +1604,10 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "00000000-0000-0000-0000-000000000000",
-            "description": "ID of the order.",
-            "minLength": 0,
-            "maxLength": 255,
+            "example": "00000000-0000-4000-8000-000000000000",
+            "description": "ID of the order. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
             "format": "uuid",
             "nullable": false
           },
@@ -1676,7 +1676,7 @@
           "payment_url": {
             "type": "string",
             "description": "A URL of a publicly-accessible webpage to pay for the order.",
-            "example": "https://www.aryeo.com/v2/stripe/checkout/order/00000000-0000-0000-0000-000000000000?pageType=order",
+            "example": "https://www.aryeo.com/v2/stripe/checkout/order/00000000-0000-4000-8000-000000000000?pageType=order",
             "maxLength": 65535,
             "minLength": 0,
             "nullable": true
@@ -1684,7 +1684,7 @@
           "status_url": {
             "type": "string",
             "description": "A URL of a publicly-accessible webpage to see the order's status.",
-            "example": "https://www.aryeo.com/v2/orders/92b714d7-4a95-4707-8f25-16e6ae077d1f/status/public",
+            "example": "https://www.aryeo.com/v2/orders/00000000-0000-4000-8000-000000000000/status/public",
             "maxLength": 65535,
             "minLength": 0,
             "nullable": true
@@ -1740,10 +1740,10 @@
           "id": {
             "type": "string",
             "format": "uuid",
-            "example": "00000000-0000-0000-0000-000000000000",
-            "minLength": 0,
-            "maxLength": 255,
-            "description": "UUID of the order form.",
+            "example": "00000000-0000-4000-8000-000000000000",
+            "minLength": 36,
+            "maxLength": 36,
+            "description": "ID of the order form. UUID Version 4.",
             "nullable": false
           },
           "title": {
@@ -1759,7 +1759,7 @@
             "format": "uri",
             "minLength": 0,
             "maxLength": 255,
-            "example": "https://www.aryeo.com/order-forms/00000000-0000-0000-0000-000000000000",
+            "example": "https://www.aryeo.com/order-forms/00000000-0000-4000-8000-000000000000",
             "description": "A URL of a publicly-accessible webpage for this order form.",
             "nullable": false
           }
@@ -1932,11 +1932,11 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "ID of the website.",
-            "minLength": 0,
-            "maxLength": 255,
+            "description": "ID of the website. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
             "format": "uuid",
-            "example": "00000000-0000-0000-0000-000000000000",
+            "example": "00000000-0000-4000-8000-000000000000",
             "nullable": false
           },
           "branded_url": {
@@ -2025,10 +2025,10 @@
           "id": {
             "type": "string",
             "format": "uuid",
-            "minLength": 0,
-            "maxLength": 255,
-            "description": "ID of the user.",
-            "example": "00000000-0000-0000-0000-000000000000",
+            "minLength": 36,
+            "maxLength": 36,
+            "description": "ID of the user. UUID Version 4.",
+            "example": "00000000-0000-4000-8000-000000000000",
             "nullable": false
           },
           "email": {
@@ -2094,10 +2094,10 @@
         "properties": {
           "id": {
             "type": "string",
-            "example": "00000000-0000-0000-0000-000000000000",
-            "description": "ID of the video.",
-            "minLength": 0,
-            "maxLength": 255,
+            "example": "00000000-0000-4000-8000-000000000000",
+            "description": "ID of the video. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
             "format": "uuid",
             "nullable": false
           },
@@ -2165,7 +2165,7 @@
           "download_url": {
             "type": "string",
             "description": "A URL for downloading the video.",
-            "example": "https://videos.aryeo.com/listings/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000.mp4",
+            "example": "https://videos.aryeo.com/listings/00000000-0000-4000-8000-000000000000/00000000-0000-4000-8000-000000000000.mp4",
             "maxLength": 65535,
             "format": "uri",
             "minLength": 1,
@@ -2175,7 +2175,7 @@
             "type": "string",
             "format": "uri",
             "description": "A URL linking to a public viewing optimized webpage the video.",
-            "example": "https://www.aryeo.com/v2/00000000-0000-0000-0000-000000000000/videos/1",
+            "example": "https://www.aryeo.com/v2/00000000-0000-4000-8000-000000000000/videos/1",
             "minLength": 0,
             "maxLength": 65535,
             "nullable": true

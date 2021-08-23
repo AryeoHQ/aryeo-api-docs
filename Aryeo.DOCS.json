@@ -26,9 +26,390 @@
     }
   ],
   "paths": {
+    "/appointments": {
+      "get": {
+        "summary": "List all appointments.",
+        "tags": [
+          "appointments"
+        ],
+        "responses": {
+          "200": {
+            "description": "AppointmentCollection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentCollection"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-appointments",
+        "description": "List all appointments. By default, returns a list of appointments that have been scheduled and have not been canceled",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "order,users"
+            },
+            "in": "query",
+            "name": "include",
+            "description": "Comma separated list of optional data to include in the response.",
+            "allowEmptyValue": true
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "UPCOMING",
+              "minLength": 1,
+              "maxLength": 100,
+              "enum": [
+                "PAST",
+                "UPCOMING"
+              ]
+            },
+            "in": "query",
+            "name": "filter[tense]",
+            "description": "Return appointments that are upcoming or in the past."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "format": "date-time",
+              "example": "2021-01-01T13:00:00Z"
+            },
+            "in": "query",
+            "name": "filter[start_at_gte]",
+            "description": "Return appointments where the start_at field is greater than or equal to this value. Effectively, appointments that start after this date."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "format": "date-time",
+              "example": "2021-01-02T13:00:00Z"
+            },
+            "in": "query",
+            "name": "filter[start_at_lte]",
+            "description": "Return appointments where the start_at field is less than or equal to this value. Effectively, appointments that start before this date."
+          },
+          {
+            "schema": {
+              "type": "array",
+              "example": [
+                "00000000-0000-4000-8000-000000000000"
+              ],
+              "minLength": 36,
+              "maxLength": 36,
+              "format": "uuid"
+            },
+            "in": "query",
+            "name": "filter[user_ids]",
+            "description": "The IDs of users whose appointments will be retrieved. UUID Version 4."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "-created_at",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Comma separated list of fields used for sorting. Placing a minus symbol in front of a field name sorts in descending order. Defaults to `-start_at`."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "25",
+              "minLength": 1,
+              "maxLength": 5
+            },
+            "in": "query",
+            "name": "per_page",
+            "description": "The number of items per page. Defaults to 25."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5,
+              "example": "2"
+            },
+            "in": "query",
+            "name": "page",
+            "description": "The requested page. Defaults to 1."
+          }
+        ],
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "x-internal": false
+      },
+      "parameters": []
+    },
+    "/appointments/{appointment_id}/cancel": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "00000000-0000-0000-0000-000000000000"
+          },
+          "name": "appointment_id",
+          "in": "path",
+          "required": true,
+          "description": "The ID of an appointment."
+        }
+      ],
+      "put": {
+        "summary": "Cancel an appointment.",
+        "operationId": "put-appointments-appointment-id-cancel",
+        "responses": {
+          "200": {
+            "description": "AppointmentResource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentResource"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": []
+                }
+              }
+            },
+            "headers": []
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "description": "Cancel an appointment. The appointments order's customer can be optionally notified of this change. ",
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "tags": [
+          "appointments"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentCancelPutPayload"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/appointments/{appointment_id}/reschedule": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "00000000-0000-0000-0000-000000000000"
+          },
+          "name": "appointment_id",
+          "in": "path",
+          "required": true,
+          "description": "The ID of an appointment."
+        }
+      ],
+      "put": {
+        "summary": "Reschedule an appointment.",
+        "operationId": "put-appointments-appointment-id-reschedule",
+        "responses": {
+          "200": {
+            "description": "AppointmentResource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentResource"
+                }
+              }
+            },
+            "headers": []
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "description": "Reschedule an appointment. The appointments order's customer can be optionally notified of this change. ",
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "tags": [
+          "appointments"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppointmentReschedulePutPayload"
+              }
+            }
+          }
+        }
+      }
+    },
     "/listings": {
       "get": {
-        "summary": "Get the listings available to a group.",
+        "summary": "List all listings.",
         "tags": [
           "listings"
         ],
@@ -39,6 +420,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ListingCollection"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -75,7 +466,7 @@
           }
         },
         "operationId": "get-listings",
-        "description": "Get the listings available to a group.",
+        "description": "Lists all listings available to a group.",
         "parameters": [
           {
             "schema": {
@@ -286,7 +677,7 @@
         }
       ],
       "get": {
-        "summary": "Get information about a listing.",
+        "summary": "Retrieve a listing.",
         "tags": [
           "listings"
         ],
@@ -297,6 +688,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ListingResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -333,7 +734,7 @@
           }
         },
         "operationId": "get-listings-id",
-        "description": "Get information about a listing.",
+        "description": "Retrieves the details of a listing with the given ID.",
         "parameters": [
           {
             "schema": {
@@ -355,9 +756,126 @@
         ]
       }
     },
+    "/products": {
+      "get": {
+        "summary": "Get products available to a group.",
+        "responses": {
+          "200": {
+            "description": "ProductCollection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductCollection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-products",
+        "description": "Get products of a group.",
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "-created_at",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Comma separated list of fields used for sorting. Placing a minus symbol in front of a field name sorts in descending order. Defaults to `title`."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "25",
+              "minLength": 1,
+              "maxLength": 5
+            },
+            "in": "query",
+            "name": "per_page",
+            "description": "The number of items per page. Defaults to 25."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5,
+              "example": "2"
+            },
+            "in": "query",
+            "name": "page",
+            "description": "The requested page. Defaults to 1."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "filter[search]",
+            "description": "Return products that have fields matching this term."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "filter[category_ids]",
+            "description": "Return products in the given categories."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "filter[type]",
+            "description": "Return products matching the given type. Allowed values are: MAIN, ADDON."
+          }
+        ],
+        "tags": [
+          "orders"
+        ]
+      },
+      "parameters": []
+    },
     "/orders": {
       "get": {
-        "summary": "Get orders available to a group.",
+        "summary": "List all orders.",
         "responses": {
           "200": {
             "description": "OrderCollection",
@@ -365,6 +883,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OrderCollection"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -401,7 +929,7 @@
           }
         },
         "operationId": "get-orders",
-        "description": "Get orders of a group.",
+        "description": "Lists all orders of a group.",
         "security": [
           {
             "Token": []
@@ -456,6 +984,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OrderResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -523,9 +1061,139 @@
         }
       }
     },
+    "/unconfirmed-appointments": {
+      "get": {
+        "summary": "List all unconfirmed appointments.",
+        "tags": [
+          "appointments"
+        ],
+        "responses": {
+          "200": {
+            "description": "UnconfirmedAppointmentCollection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnconfirmedAppointmentCollection"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-unconfirmed-appointments",
+        "description": "List all unconfirmed appointments. These are appointments that have not been scheduled. ",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "order,users"
+            },
+            "in": "query",
+            "name": "include",
+            "description": "Comma separated list of optional data to include in the response.",
+            "allowEmptyValue": true
+          },
+          {
+            "schema": {
+              "type": "array",
+              "example": [
+                "00000000-0000-4000-8000-000000000000"
+              ],
+              "minLength": 36,
+              "maxLength": 36,
+              "format": "uuid"
+            },
+            "in": "query",
+            "name": "filter[user_ids]",
+            "description": "The IDs of users whose appointments will be retrieved. UUID Version 4."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "-created_at",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "in": "query",
+            "name": "sort",
+            "description": "Comma separated list of fields used for sorting. Placing a minus symbol in front of a field name sorts in descending order. Defaults to `-start_at`."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "example": "25",
+              "minLength": 1,
+              "maxLength": 5
+            },
+            "in": "query",
+            "name": "per_page",
+            "description": "The number of items per page. Defaults to 25."
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 5,
+              "example": "2"
+            },
+            "in": "query",
+            "name": "page",
+            "description": "The requested page. Defaults to 1."
+          }
+        ],
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "x-internal": false
+      },
+      "parameters": []
+    },
     "/vendors": {
       "get": {
-        "summary": "Get vendors available to a group.",
+        "summary": "List all vendors.",
         "responses": {
           "200": {
             "description": "GroupCollection",
@@ -533,6 +1201,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GroupCollection"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -569,7 +1247,7 @@
           }
         },
         "operationId": "get-vendors",
-        "description": "Get vendors available to a group.",
+        "description": "Lists all vendors available to a group.",
         "security": [
           {
             "Token": []
@@ -597,7 +1275,7 @@
     },
     "/vendors/{vendor_id}": {
       "get": {
-        "summary": "Get vendors available to a group.",
+        "summary": "Retrieve a vendor.",
         "responses": {
           "200": {
             "description": "GroupResource",
@@ -605,6 +1283,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GroupResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
                 }
               }
             }
@@ -641,7 +1329,7 @@
           }
         },
         "operationId": "get-vendors-id",
-        "description": "Get information about a vendor.",
+        "description": "Retrieves the details of a vendor with the given ID.",
         "security": [
           {
             "Token": []
@@ -683,6 +1371,10 @@
     }
   },
   "tags": [
+    {
+      "name": "appointments",
+      "description": "Operations related to appointments."
+    },
     {
       "name": "listings",
       "description": "Operations related to listings."
@@ -900,6 +1592,193 @@
             "maxLength": 255,
             "description": "What was the state of the request?",
             "nullable": false
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "Appointment": {
+        "title": "Appointment",
+        "type": "object",
+        "description": "An appointment.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "description": "The ID of the appointment.",
+            "nullable": false
+          },
+          "status": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "SCHEDULED",
+            "description": "The status of the appointment.",
+            "nullable": true,
+            "enum": [
+              "SCHEDULED",
+              "UNSCHEDULED",
+              "RESCHEDULED",
+              "CANCELED"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 65536,
+            "example": "Appointment title",
+            "description": "The title of the appointment.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 65536,
+            "example": "Customer: John Doe\nOrder Details: Order #123",
+            "description": "The multi-line description of the appointment.",
+            "nullable": true
+          },
+          "start_at": {
+            "type": "string",
+            "description": "The date and time (ISO 8601 format) when the appointment is set to start.",
+            "format": "date-time",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "2021-06-30T20:30:00Z",
+            "nullable": true
+          },
+          "end_at": {
+            "type": "string",
+            "description": "The date and time (ISO 8601 format) when the appointment is set to end.",
+            "example": "2021-06-30T20:30:00Z",
+            "format": "date-time",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": true
+          },
+          "duration": {
+            "type": "integer",
+            "description": "The length of the appointment in minutes.",
+            "example": 60,
+            "nullable": true
+          },
+          "order": {
+            "$ref": "#/components/schemas/Order"
+          },
+          "users": {
+            "description": "Users attached to the appointment.",
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "AppointmentCancelPutPayload": {
+        "title": "AppointmentCancelPutPayload",
+        "type": "object",
+        "description": "Payload for canceling an appointment record.",
+        "properties": {
+          "notify_customer": {
+            "type": "boolean",
+            "description": "Sends a notification to the appointment's order's customer that the appointment was canceled.",
+            "nullable": true,
+            "example": "false"
+          }
+        }
+      },
+      "AppointmentCollection": {
+        "title": "AppointmentCollection",
+        "type": "object",
+        "description": "A collection of appointments.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "type": "array",
+            "description": "",
+            "items": {
+              "$ref": "#/components/schemas/Appointment"
+            },
+            "nullable": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta",
+            "nullable": true
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinks",
+            "nullable": true
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "AppointmentReschedulePutPayload": {
+        "title": "AppointmentReschedulePayload",
+        "type": "object",
+        "description": "Payload for rescheduling an appointment record.",
+        "properties": {
+          "start_at": {
+            "type": "string",
+            "description": "The new date and time (ISO 8601 format) when the appointment is set to start.",
+            "example": "2021-06-30T20:30:00Z",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": true,
+            "format": "date-time"
+          },
+          "end_at": {
+            "type": "string",
+            "description": "The new date and time (ISO 8601 format) when the appointment is set to end.",
+            "example": "2021-06-30T21:30:00Z",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": true,
+            "format": "date-time"
+          },
+          "notify_customer": {
+            "type": "boolean",
+            "description": "Send a notification to the appointment's order's customer that the appointment was rescheduled.",
+            "nullable": true,
+            "example": "false"
+          }
+        },
+        "required": [
+          "start_at",
+          "end_at"
+        ]
+      },
+      "AppointmentResource": {
+        "title": "AppointmentResource",
+        "type": "object",
+        "description": "An appointment.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "$ref": "#/components/schemas/Appointment"
           }
         },
         "required": [
@@ -1613,13 +2492,13 @@
           },
           "number": {
             "type": "integer",
-            "description": "A vanity id used for internal tracking of orders for a given vendor. ",
+            "description": "A vanity id used for internal tracking of orders for a given vendor.",
             "example": 100,
             "nullable": false
           },
           "title": {
             "type": "string",
-            "description": "The title of the order, generated by combining the order's number property with the prefix \"Order #\". ",
+            "description": "The title of the order, generated by combining the order's number property with the prefix \"Order #\".",
             "example": "Order #100",
             "nullable": false,
             "minLength": 0,
@@ -1651,7 +2530,7 @@
           },
           "currency": {
             "type": "string",
-            "description": "The three-letter ISO 4217 currency code for the currency in which this order was or will be transacted. Must be a supported currency of Aryeo. ",
+            "description": "The three-letter ISO 4217 currency code for the currency in which this order was or will be transacted. Must be a supported currency of Aryeo.",
             "example": "usd",
             "minLength": 0,
             "maxLength": 255,
@@ -1669,7 +2548,7 @@
           "total_amount": {
             "type": "integer",
             "example": 2099,
-            "description": "A positive integer in cents representing the total order amount that was or will be charged.",
+            "description": "A positive integer in the smallest currency unit (that is, 100 cents for $1.00) representing the total order amount that was or will be charged. This accounts for order items and taxes. ",
             "nullable": false,
             "minimum": 0
           },
@@ -1688,6 +2567,19 @@
             "maxLength": 65535,
             "minLength": 0,
             "nullable": true
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Group"
+          },
+          "items": {
+            "type": "array",
+            "description": "items",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
           }
         },
         "required": [
@@ -1695,7 +2587,8 @@
           "number",
           "title",
           "fulfillment_status",
-          "payment_status"
+          "payment_status",
+          "status_url"
         ]
       },
       "OrderCollection": {
@@ -1769,6 +2662,55 @@
           "url"
         ]
       },
+      "OrderItem": {
+        "title": "OrderItem",
+        "type": "object",
+        "description": "A product associated with an order.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "00000000-0000-4000-8000-000000000000",
+            "description": "ID of the item. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
+            "format": "uuid",
+            "nullable": false
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the item.",
+            "example": "Aerial Video",
+            "nullable": false,
+            "minLength": 0,
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the item.",
+            "example": "A fly-by drone video of the property.",
+            "nullable": false,
+            "minLength": 0,
+            "maxLength": 255
+          },
+          "amount": {
+            "type": "integer",
+            "example": 2099,
+            "description": "A positive integer in the smallest currency unit (that is, 100 cents for $1.00) representing the cost of a single instance of this item. This is multiplied by the quantity to calculate what was or will be charged.",
+            "nullable": false,
+            "minimum": 0
+          },
+          "quantity": {
+            "type": "integer",
+            "example": 2,
+            "description": "A positive integer representing the number of instances of this item that was or will be charged.",
+            "nullable": false,
+            "minimum": 0
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
       "OrderPostPayload": {
         "title": "OrderPostPayload",
         "type": "object",
@@ -1797,6 +2739,13 @@
             "example": "paid",
             "description": "The payment status of the order. Defaults to \"UNPAID\". ",
             "nullable": true
+          },
+          "place_id": {
+            "type": "string",
+            "example": "abcdef_1234",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "Google Places ID of the address to attach to the order."
           }
         }
       },
@@ -1925,6 +2874,165 @@
           "path"
         ]
       },
+      "Product": {
+        "title": "Product",
+        "type": "object",
+        "description": "A product available for purchase via an order.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "00000000-0000-4000-8000-000000000000",
+            "description": "ID of the product. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
+            "format": "uuid",
+            "nullable": false
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the product.",
+            "example": "House photos",
+            "nullable": false,
+            "minLength": 0,
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the product.",
+            "example": "Capture photos of a house for sale.",
+            "nullable": false,
+            "minLength": 0,
+            "maxLength": 65536
+          },
+          "type": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "The type of product.",
+            "nullable": false,
+            "enum": [
+              "MAIN",
+              "ADDON"
+            ],
+            "example": "MAIN"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariant"
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductCategory"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "type"
+        ]
+      },
+      "ProductCategory": {
+        "title": "ProductCategory",
+        "type": "object",
+        "description": "A category for products.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "00000000-0000-4000-8000-000000000000",
+            "description": "ID of the product category. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
+            "format": "uuid",
+            "nullable": false
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the product category.",
+            "example": "Photography",
+            "nullable": false,
+            "minLength": 0,
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ]
+      },
+      "ProductCollection": {
+        "title": "Production Collection",
+        "type": "object",
+        "description": "A collection of products.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "type": "array",
+            "description": "",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            },
+            "nullable": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta",
+            "nullable": true
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinks",
+            "nullable": true
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "ProductVariant": {
+        "title": "ProductVariant",
+        "type": "object",
+        "description": "A variant of a product.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "00000000-0000-4000-8000-000000000000",
+            "description": "ID of the product variant. UUID Version 4.",
+            "minLength": 36,
+            "maxLength": 36,
+            "format": "uuid",
+            "nullable": false
+          },
+          "title": {
+            "type": "string",
+            "description": "The title of the product variant.",
+            "example": "House photos",
+            "nullable": false,
+            "minLength": 0,
+            "maxLength": 255
+          },
+          "price": {
+            "type": "integer",
+            "description": "A positive integer in the smallest currency unit (that is, 100 cents for $1.00) representing the price of the product variant.",
+            "example": 10000,
+            "nullable": false,
+            "min": 0
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "price"
+        ]
+      },
       "PropertyWebsite": {
         "title": "PropertyWebsite",
         "type": "object",
@@ -2016,6 +3124,136 @@
             "nullable": true
           }
         }
+      },
+      "UnconfirmedAppointment": {
+        "title": "UnconfirmedAppointment",
+        "type": "object",
+        "description": "An unconfirmed appointment.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "format": "uuid",
+            "example": "00000000-0000-0000-0000-000000000000",
+            "description": "The ID of the appointment.",
+            "nullable": false
+          },
+          "title": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 65536,
+            "example": "Appointment title",
+            "description": "The title of the appointment.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 65536,
+            "example": "Customer: John Doe\nOrder Details: Order #123",
+            "description": "The multi-line description of the appointment.",
+            "nullable": true
+          },
+          "order": {
+            "$ref": "#/components/schemas/Order"
+          },
+          "users": {
+            "description": "Users attached to the appointment.",
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "preference_type": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "TIME",
+            "description": "The type of preferred scheduling information provided by a customer to aid in scheduling this appointment.",
+            "nullable": true,
+            "enum": [
+              "ASAP",
+              "TIME",
+              "TIME_OF_DAY"
+            ]
+          },
+          "preferred_start_at": {
+            "type": "string",
+            "description": "A preferred date and time (ISO 8601 format) for when the appointment could start. Only returned if unconfirmed appointment's preference type is TIME. ",
+            "format": "date-time",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "2021-06-30T20:30:00Z",
+            "nullable": true
+          },
+          "preferred_start_at_day": {
+            "type": "string",
+            "description": "A preferred date (ISO 8601 format) for when the appointment could start. Only returned if unconfirmed appointment's preference type is TIME_OF_DAY. ",
+            "format": "date",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "2021-06-30",
+            "nullable": true
+          },
+          "preferred_start_at_time_of_day": {
+            "type": "string",
+            "description": "A preferred time of day for when the appointment could start. Only returned if unconfirmed appointment's preference type is TIME_OF_DAY. ",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "AFTERNOON",
+            "nullable": true,
+            "enum": [
+              "MORNING",
+              "AFTERNOON",
+              "TWILIGHT"
+            ]
+          },
+          "duration": {
+            "type": "integer",
+            "description": "The estimated length of the appointment in minutes, if available.",
+            "example": 60,
+            "nullable": true
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "UnconfirmedAppointmentCollection": {
+        "title": "UnconfirmedAppointmentCollection",
+        "type": "object",
+        "description": "A collection of appointments.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "type": "array",
+            "description": "",
+            "items": {
+              "$ref": "#/components/schemas/UnconfirmedAppointment"
+            },
+            "nullable": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta",
+            "nullable": true
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinks",
+            "nullable": true
+          }
+        },
+        "required": [
+          "status"
+        ]
       },
       "User": {
         "type": "object",

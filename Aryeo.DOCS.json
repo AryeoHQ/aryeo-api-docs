@@ -44,41 +44,41 @@
             }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -222,62 +222,55 @@
                 "schema": {
                   "$ref": "#/components/schemas/AppointmentResource"
                 }
-              },
-              "application/xml": {
-                "schema": {
-                  "type": "object",
-                  "properties": []
-                }
               }
-            },
-            "headers": []
+            }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "409": {
-            "description": "ApiError",
+            "description": "ApiError409",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError409"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -332,55 +325,54 @@
                   "$ref": "#/components/schemas/AppointmentResource"
                 }
               }
-            },
-            "headers": []
+            }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "409": {
-            "description": "ApiError",
+            "description": "ApiError409",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError409"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -425,41 +417,41 @@
             }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -693,41 +685,41 @@
             }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -771,31 +763,31 @@
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -844,7 +836,10 @@
           },
           {
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "Photography"
             },
             "in": "query",
             "name": "filter[search]",
@@ -852,7 +847,13 @@
           },
           {
             "schema": {
-              "type": "string"
+              "type": "array",
+              "example": [
+                "00000000-0000-4000-8000-000000000000"
+              ],
+              "minLength": 36,
+              "maxLength": 36,
+              "format": "uuid"
             },
             "in": "query",
             "name": "filter[category_ids]",
@@ -860,7 +861,10 @@
           },
           {
             "schema": {
-              "type": "string"
+              "type": "string",
+              "example": "MAIN",
+              "minLength": 0,
+              "maxLength": 255
             },
             "in": "query",
             "name": "filter[type]",
@@ -888,41 +892,41 @@
             }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -989,51 +993,51 @@
             }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "409": {
-            "description": "ApiError",
+            "description": "ApiError409",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError409"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -1079,41 +1083,41 @@
             }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -1206,41 +1210,41 @@
             }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -1288,41 +1292,41 @@
             }
           },
           "403": {
-            "description": "ApiError",
+            "description": "ApiError403",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError403"
                 }
               }
             }
           },
           "404": {
-            "description": "ApiError",
+            "description": "ApiError404",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError404"
                 }
               }
             }
           },
           "422": {
-            "description": "ApiFail",
+            "description": "ApiFail422",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiFail"
+                  "$ref": "#/components/schemas/ApiFail422"
                 }
               }
             }
           },
           "500": {
-            "description": "ApiError",
+            "description": "ApiError500",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiError"
+                  "$ref": "#/components/schemas/ApiError500"
                 }
               }
             }
@@ -1547,10 +1551,10 @@
           "longitude"
         ]
       },
-      "ApiError": {
+      "ApiError403": {
         "type": "object",
-        "title": "ApiError",
-        "description": "A generic error returned by the API.",
+        "title": "ApiError403",
+        "description": "A forbidden error returned by the API.",
         "properties": {
           "status": {
             "type": "string",
@@ -1563,7 +1567,40 @@
           "message": {
             "type": "string",
             "description": "The error message.",
-            "example": "Not found.",
+            "example": "{ApiError message.}",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": false
+          },
+          "code": {
+            "type": "integer",
+            "description": "A numeric code corresponding to the error.",
+            "example": 403,
+            "nullable": true
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "ApiError404": {
+        "type": "object",
+        "title": "ApiError404",
+        "description": "A not found error returned by the API.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "message": {
+            "type": "string",
+            "description": "The error message.",
+            "example": "{ApiError message.}",
             "minLength": 0,
             "maxLength": 255,
             "nullable": false
@@ -1580,10 +1617,76 @@
           "message"
         ]
       },
-      "ApiFail": {
+      "ApiError409": {
         "type": "object",
-        "title": "ApiFail",
-        "description": "A generic failure returned by the API.",
+        "title": "ApiError409",
+        "description": "A conflict error returned by the API.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "message": {
+            "type": "string",
+            "description": "The error message.",
+            "example": "{ApiError message.}",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": false
+          },
+          "code": {
+            "type": "integer",
+            "description": "A numeric code corresponding to the error.",
+            "example": 409,
+            "nullable": true
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "ApiError500": {
+        "type": "object",
+        "title": "ApiError500",
+        "description": "An internal server error returned by the API.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "error",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "message": {
+            "type": "string",
+            "description": "The error message.",
+            "example": "{ApiError message.}",
+            "minLength": 0,
+            "maxLength": 255,
+            "nullable": false
+          },
+          "code": {
+            "type": "integer",
+            "description": "A numeric code corresponding to the error.",
+            "example": 500,
+            "nullable": true
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "ApiFail422": {
+        "type": "object",
+        "title": "ApiFail422",
+        "description": "A processing or validation failure returned by the API.",
         "properties": {
           "status": {
             "type": "string",
@@ -1675,6 +1778,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/User"
+            }
+          },
+          "items": {
+            "type": "array",
+            "description": "Items attached to the appointment.",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
             }
           }
         },

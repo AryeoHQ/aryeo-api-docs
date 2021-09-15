@@ -141,12 +141,14 @@
           {
             "schema": {
               "type": "array",
-              "example": [
-                "00000000-0000-4000-8000-000000000000"
-              ],
-              "minLength": 36,
-              "maxLength": 36,
-              "format": "uuid"
+              "items": {
+                "description": "ID of a user. UUID Version 4.",
+                "type": "string",
+                "minLength": 36,
+                "maxLength": 36,
+                "format": "uuid",
+                "example": "00000000-0000-4000-8000-000000000000"
+              }
             },
             "in": "query",
             "name": "filter[user_ids]",
@@ -192,8 +194,7 @@
           }
         ],
         "x-internal": false
-      },
-      "parameters": []
+      }
     },
     "/appointments/{appointment_id}/cancel": {
       "parameters": [
@@ -848,12 +849,14 @@
           {
             "schema": {
               "type": "array",
-              "example": [
-                "00000000-0000-4000-8000-000000000000"
-              ],
-              "minLength": 36,
-              "maxLength": 36,
-              "format": "uuid"
+              "items": {
+                "description": "ID of a category. UUID Version 4.",
+                "type": "string",
+                "minLength": 36,
+                "maxLength": 36,
+                "format": "uuid",
+                "example": "00000000-0000-4000-8000-000000000000"
+              }
             },
             "in": "query",
             "name": "filter[category_ids]",
@@ -1065,6 +1068,102 @@
         }
       }
     },
+    "/orders/{order_id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 36,
+            "maxLength": 36,
+            "example": "00000000-0000-4000-8000-000000000000"
+          },
+          "name": "order_id",
+          "in": "path",
+          "required": true,
+          "description": "The ID of an order. UUID Version 4."
+        }
+      ],
+      "get": {
+        "summary": "Retrieve an order.",
+        "tags": [
+          "orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OrderResource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError403",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError404"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail422",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail422"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError500",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError500"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-orders-id",
+        "description": "Retrieves the details of an order with the given ID.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "items,appointments,unconfirmed_appointments"
+            },
+            "in": "query",
+            "name": "include",
+            "description": "Comma separated list of optional data to include in the response.",
+            "allowEmptyValue": true
+          }
+        ],
+        "security": [
+          {
+            "Token": []
+          }
+        ]
+      }
+    },
     "/unconfirmed-appointments": {
       "get": {
         "summary": "List all unconfirmed appointments.",
@@ -1141,12 +1240,14 @@
           {
             "schema": {
               "type": "array",
-              "example": [
-                "00000000-0000-4000-8000-000000000000"
-              ],
-              "minLength": 36,
-              "maxLength": 36,
-              "format": "uuid"
+              "items": {
+                "description": "ID of a user. UUID Version 4.",
+                "type": "string",
+                "minLength": 36,
+                "maxLength": 36,
+                "format": "uuid",
+                "example": "00000000-0000-4000-8000-000000000000"
+              }
             },
             "in": "query",
             "name": "filter[user_ids]",
@@ -1194,6 +1295,103 @@
         "x-internal": false
       },
       "parameters": []
+    },
+    "/unconfirmed-appointments/{unconfirmed_appointment_id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string",
+            "format": "uuid",
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "00000000-0000-0000-0000-000000000000"
+          },
+          "name": "unconfirmed_appointment_id",
+          "in": "path",
+          "required": true,
+          "description": "The ID of an appointment."
+        }
+      ],
+      "get": {
+        "summary": "Retrieve an unconfirmed appointment.",
+        "tags": [
+          "appointments"
+        ],
+        "responses": {
+          "200": {
+            "description": "UnconfirmedAppointmentResource",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnconfirmedAppointmentResource"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiError403",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiError404",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError404"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "ApiFail422",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFail422"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "ApiError500",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError500"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "get-unconfirmed-appointments-id",
+        "description": "Retrieves the details of an unconfirmed appointment with the given ID.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 255,
+              "example": "order,users"
+            },
+            "in": "query",
+            "name": "include",
+            "description": "Comma separated list of optional data to include in the response.",
+            "allowEmptyValue": true
+          }
+        ],
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "x-internal": false
+      }
     },
     "/vendors": {
       "get": {
@@ -1274,8 +1472,7 @@
         "tags": [
           "vendors"
         ]
-      },
-      "parameters": []
+      }
     },
     "/vendors/{vendor_id}": {
       "get": {
@@ -2684,11 +2881,26 @@
           "customer": {
             "$ref": "#/components/schemas/Group"
           },
+          "listing": {
+            "$ref": "#/components/schemas/Listing"
+          },
           "items": {
             "type": "array",
             "description": "items",
             "items": {
               "$ref": "#/components/schemas/OrderItem"
+            }
+          },
+          "appointments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Appointment"
+            }
+          },
+          "unconfirmed_appointments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UnconfirmedAppointment"
             }
           }
         },
@@ -3074,7 +3286,7 @@
         ]
       },
       "ProductCollection": {
-        "title": "Production Collection",
+        "title": "ProductionCollection",
         "type": "object",
         "description": "A collection of products.",
         "properties": {
@@ -3359,6 +3571,27 @@
           "links": {
             "$ref": "#/components/schemas/PaginationLinks",
             "nullable": true
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "UnconfirmedAppointmentResource": {
+        "title": "UnconfirmedAppointmentResource",
+        "type": "object",
+        "description": "An appointment.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "success",
+            "minLength": 0,
+            "maxLength": 255,
+            "description": "What was the state of the request?",
+            "nullable": false
+          },
+          "data": {
+            "$ref": "#/components/schemas/UnconfirmedAppointment"
           }
         },
         "required": [

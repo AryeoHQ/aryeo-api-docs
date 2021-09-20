@@ -751,7 +751,7 @@
     },
     "/products": {
       "get": {
-        "summary": "Get products available to a group.",
+        "summary": "List all products.",
         "responses": {
           "200": {
             "description": "ProductCollection",
@@ -795,7 +795,7 @@
           }
         },
         "operationId": "get-products",
-        "description": "Get products of a group.",
+        "description": "List all products of a group.",
         "security": [
           {
             "Token": []
@@ -3286,7 +3286,7 @@
         ]
       },
       "ProductCollection": {
-        "title": "ProductionCollection",
+        "title": "ProductCollection",
         "type": "object",
         "description": "A collection of products.",
         "properties": {

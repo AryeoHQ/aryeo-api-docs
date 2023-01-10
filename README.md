@@ -1,3 +1,9 @@
-<img src="https://raw.githubusercontent.com/jarrodparkes/images/master/aryeo-logo.svg" alt="Aryeo logo" width="256"/>
+# Aryeo API Docs
 
-The Aryeo API provides access to the Aryeo platform.
+The public API docs for Aryeo.
+
+## Generate Docs
+
+```bash
+npx redoc-cli build -o index.html --title Aryeo API Docs Aryeo.DOCS.json
+```
